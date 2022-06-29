@@ -299,8 +299,8 @@ Extract sequence for candidate W scaffolds using `scaffold_list_extractor.py`.
 
 ```
 mkdir ./W_chromosome_identification/candidate_W/
-python scaffold_list_extractor.py ./genome_crotalus_female/CV0650_10xAssembly_Round3_pseudohap.1.fasta ./W_chromosome_identification/CANDIDATE_W_pseudohap1_scaffold.list.txt ./W_chromosome_identification/candidate_W/pseudohaplotype1.candidate_W.fasta
-python scaffold_list_extractor.py ./genome_crotalus_female/CV0650_10xAssembly_Round3_pseudohap.2.fasta ./W_chromosome_identification/CANDIDATE_W_pseudohap2_scaffold.list.txt ./W_chromosome_identification/candidate_W/pseudohaplotype2.candidate_W.fasta
+python ./python/scaffold_list_extractor.py ./genome_crotalus_female/CV0650_10xAssembly_Round3_pseudohap.1.fasta ./W_chromosome_identification/CANDIDATE_W_pseudohap1_scaffold.list.txt ./W_chromosome_identification/candidate_W/pseudohaplotype1.candidate_W.fasta
+python ./python/scaffold_list_extractor.py ./genome_crotalus_female/CV0650_10xAssembly_Round3_pseudohap.2.fasta ./W_chromosome_identification/CANDIDATE_W_pseudohap2_scaffold.list.txt ./W_chromosome_identification/candidate_W/pseudohaplotype2.candidate_W.fasta
 cat ./W_chromosome_identification/candidate_W/pseudohaplotype1.candidate_W.fasta ./W_chromosome_identification/candidate_W/pseudohaplotype2.candidate_W.fasta > ./W_chromosome_identification/candidate_W/Cviridis_CV0650_candidate_W.fasta
 ```
 
@@ -356,12 +356,43 @@ cd ..
 #### Extract CDS sequences
 
 ```
-gffread -x ./divergence_crotalus_anolis/ortholog_sequences/anolis.cds.fasta -g ./genome_anolis/GCF_000090745.1_AnoCar2.0_genomic.fna ./genome_anolis/GCF_000090745.1_AnoCar2.0_genomic.gff
-grep -v '#' ./genome_crotalus/CroVir_rnd1.all.maker.final.homologIDs.gff | gffread -x ./divergence_crotalus_anolis/ortholog_sequences/crotalus.cds.fasta -g ./genome_crotalus/CroVir_genome_L77pg_16Aug2017.final_rename.fasta -
+gffread -x ./divergence_crotalus_anolis/anolis.cds.fasta -g ./genome_anolis/GCF_000090745.1_AnoCar2.0_genomic.fna ./genome_anolis/GCF_000090745.1_AnoCar2.0_genomic.gff
+grep -v '#' ./genome_crotalus/CroVir_rnd1.all.maker.final.homologIDs.gff | gffread -x ./divergence_crotalus_anolis/crotalus.cds.fasta -g ./genome_crotalus/CroVir_genome_L77pg_16Aug2017.final_rename.fasta -
 ```
 
 The initial grep command for *Crotalus* removes the commented entries in the GFF (GffRead doesn't want to see these).
 
+#### Identify 1:1 orthologs using tBLASTx
+
+Make BLAST databases for reciprocal searches.
+
+```
+makeblastdb -dbtype nucl -in ./divergence_crotalus_anolis/anolis.cds.fasta
+makeblastdb -dbtype nucl -in ./divergence_crotalus_anolis/crotalus.cds.fasta
+```
+
+Perform reciprocal tBLASTx searches.
+
+```
+tblastx -num_threads 8 -max_target_seqs 5 -max_hsps 1 -evalue 0.00001 -outfmt "6 qacc sacc evalue bitscore qstart qend sstart send" -db ./divergence_crotalus_anolis/crotalus.cds.fasta -query ./divergence_crotalus_anolis/anolis.cds.fasta -out ./divergence_crotalus_anolis/tblastx_anolis2crotalus.cds.txt
+tblastx -num_threads 4 -max_target_seqs 5 -max_hsps 1 -evalue 0.00001 -outfmt "6 qacc sacc evalue bitscore qstart qend sstart send" -db ./divergence_crotalus_anolis/anolis.cds.fasta -query ./divergence_crotalus_anolis/crotalus.cds.fasta -out ./divergence_crotalus_anolis/tblastx_crotalus2anolis.cds.txt
+```
+
+Extract reciprocal best BLAST hits using `RBH_comma.py` script, adapted from the script written by [Daren Card](https://github.com/darencard). 
+
+```
+python RBH_comma.py ./divergence_crotalus_anolis/tblastx_anolis2crotalus.cds.txt ./divergence_crotalus_anolis/tblastx_crotalus2anolis.cds.txt ./divergence_crotalus_anolis/orthologs_crotalus_anolis.one2one.txt
+```
+
+This identified 12,367 ortholog pairs.
+
+Remove pairs that are Z-linked in rattlesnake.
+
+```
+grep -v 'scaffold-Z' ./divergence_crotalus_anolis/orthologs_crotalus_anolis.one2one.txt > ./divergence_crotalus_anolis/orthologs_crotalus_anolis.one2one.autosome.txt
+```
+
+This keeps __11,277 autosomal ortholog pairs__.
 
 ### Identification of 1:1 ZW gametologs
 
