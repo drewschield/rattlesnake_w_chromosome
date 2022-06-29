@@ -61,15 +61,35 @@ We generated a 10x Genomics Chromium library for a female prairie rattlesnake fr
 
 ### FastQC/MultiQC analysis
 
-Assess read quality using FastQC.
+Assess read quality using FastQC and summarize using MultiQC.
 
 #### Set up environment
 
+```
+mkdir fastq
+mkdir fastqc
+```
 
+Raw linked-read data for the female prairie rattlesnake should be placed in the `fastq` directory.
 
+#### Run FastQC analysis
 
+```
+cd fastqc
+fastqc --threads 16 -o . ../fastq/PitViper_042019_S2_L004_R1_001.fastq.gz ../fastq/PitViper_042019_S2_L004_R2_001.fastq.gz
+```
 
+#### Summarize output with MultiQC
 
+```
+multiqc .
+```
+
+The output `multiqc_report.html` can be viewed and data/plots can be exported.
+
+#### Examine results in R
+
+Run `multiqc_summary.R` for a visual summary of FastQC results using summary files in the `resources` directory.
 
 ### Assembly
 
