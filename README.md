@@ -51,6 +51,7 @@ The analysis sections below use the following software and dependencies and assu
 * [tabix](http://www.htslib.org/)
 * [bedtools](https://bedtools.readthedocs.io/en/latest/)
 * [mosdepth](https://github.com/brentp/mosdepth)
+* [GffRead](https://github.com/gpertea/gffread)
 * [STAR](https://github.com/alexdobin/STAR)
 * [R](https://cran.r-project.org/)
 
@@ -325,6 +326,39 @@ Repeat and gene annotations were repeated following scaffold improvement.
 The W chromosome assembly and annotation files are in the `resources/annotation/` directory. The assembly is also deposited at [NCBI](xxxx).
 
 ## ZW gametolog divergence
+
+We can investigate divergence between ZW gametologs and the presence of evolutionary strata based on spatial clustering of gametolog pairs with similar divergence along the Z chromosome.
+
+### Estimation of a lineage-specific mutation rate
+
+First, use divergence between rattlesnake and anole lizard 1:1 orthologs and their known divergence time to calculate a mutation rate estimate to scale divergence estimates between ZW gametologs.
+
+#### Set up environment
+
+```
+mkdir divergence_crotalus_anolis
+mkdir divergence_crotalus_anolis/ortholog_sequences
+mkdir divergence_crotalus_anolis/ortholog_alignments
+mkdir divergence_crotalus_anolis/ctl
+mkdir divergence_crotalus_anolis/codeml
+```
+
+#### Retrieve anole data
+
+```
+mkdir genome_anolis
+cd genome_anolis
+wget https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/090/745/GCF_000090745.1_AnoCar2.0/GCF_000090745.1_AnoCar2.0_genomic.fna.gz
+wget https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/090/745/GCF_000090745.1_AnoCar2.0/GCF_000090745.1_AnoCar2.0_genomic.gff.gz
+cd ..
+```
+
+#### Extract CDS sequences
+
+
+
+```
+```
 
 ### Identification of 1:1 ZW gametologs
 
