@@ -99,7 +99,7 @@ Use Supernova to assembly linked-read data into pseudohaplotype scaffolds.
 
 The assembler is optimized to work with 56-fold coverage, requiring a number of input reads based on genome size and this coverage threshold. Using an estimated 1.5 Gb genome size for prairie rattlesnake, read lengths (150 bp) and 56-fold coverage, the number of input reads is as follows: <br />
 
-1,500,000,000 x 56 / 150 = _*560,000,000 input reads*_.
+1,500,000,000 x 56 / 150 = __560,000,000 input reads__.
 
 ```
 supernova run --maxreads 560000000 --id=CV0650_female_Cviridis --fastqs=./fastq/
