@@ -99,7 +99,7 @@ Use Supernova to assembly linked-read data into pseudohaplotype scaffolds.
 
 The assembler is optimized to work with 56-fold coverage, requiring a number of input reads based on genome size and this coverage threshold. Using an estimated 1.5 Gb genome size for prairie rattlesnake, read lengths (150 bp) and 56-fold coverage, the number of input reads is as follows: <br />
 
-1,500,000,000 x 56 / *150 = 560,000,000 input reads*.
+1,500,000,000 x 56 / _150 = 560,000,000 input reads_.
 
 ```
 supernova run --maxreads 560000000 --id=CV0650_female_Cviridis --fastqs=./fastq/
@@ -200,7 +200,7 @@ Determine reasonable window size for analysis in chicken.
 
 The chicken scaffolds are highly contiguous. In order to make a reasonable comparison to the prairie rattlesnake female scaffolds, we can determine the mean length of female rattlesnake scaffolds, and make a bed file for the chicken genome with window sizes equal to this length.
 
-The mean female rattlesnake scaffold length is *10013.8 bp*, so setting chicken analysis to 10 kb windows seems reasonable.
+The mean female rattlesnake scaffold length is _10013.8 bp_, so setting chicken analysis to 10 kb windows seems reasonable.
 
 Make a bed file of chicken scaffolds in 10 kb windows after extracting 'genome' file using `python/fastq_seq_length.py` script.
 
@@ -208,6 +208,9 @@ Make a bed file of chicken scaffolds in 10 kb windows after extracting 'genome' 
 python ./python/fasta_seq_length.py ./genome_gallus/GCF_000002315.6_GRCg6a_genomic.fna > ./genome_gallus/GCF_000002315.6_GRCg6a_genomic.scaffold_lengths.txt
 bedtools makewindows -g ./genome_gallus/GCF_000002315.6_GRCg6a_genomic.scaffold_lengths.txt -w 10000 > ./genome_gallus/GCF_000002315.6_GRCg6a_genomic.10kb.window.bed
 ```
+
+
+
 
 ## W chromosome annotation
 
