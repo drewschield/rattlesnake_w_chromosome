@@ -281,7 +281,36 @@ Examine results and identify candidate W chromosome scaffolds in R.
 
 Run `W_identification_crotalus.R` to compare normalized female:male read depths, parse scaffolds with log2FM > 1, and cross-reference with candidate W scaffolds from homology search.
 
+#### 3. Filter and parse candidate W chromosome scaffolds
+
+Filter scaffolds with no hits to autosomes.
+
+```
+cd ./W_chromosome_identification/
+touch pseudohap1_no-auto_log2FM_thresh_scaffolds.txt; for i in `cat CvvPseudo1_NoAutoHits_scaffIDs_02.27.20.txt`; do awk 'BEGIN{OFS='\t'}{if ($1=='$i') print $0}' pseudohap1_log2FM_thresh_scaffolds.txt >> pseudohap1_no-auto_log2FM_thresh_scaffolds.txt; done
+touch pseudohap2_no-auto_log2FM_thresh_scaffolds.txt; for i in `cat CvvPseudo2_NoAutoHits_scaffIDs_02.27.20.txt`; do awk 'BEGIN{OFS='\t'}{if ($1=='$i') print $0}' pseudohap2_log2FM_thresh_scaffolds.txt >> pseudohap2_no-auto_log2FM_thresh_scaffolds.txt; done
+cd ..
+```
+
+The final lists of candidate W scaffolds are in `CANDIDATE_W_pseudohap1_scaffold.list.txt` and `CANDIDATE_W_pseudohap1_scaffold.list.txt` in the `resources` directory.
+
+Extract sequence for candidate W scaffolds using `scaffold_list_extractor.py`.
+
+```
+mkdir ./W_chromosome_identification/candidate_W/
+python scaffold_list_extractor.py ./genome_crotalus_female/CV0650_10xAssembly_Round3_pseudohap.1.fasta ./W_chromosome_identification/CANDIDATE_W_pseudohap1_scaffold.list.txt ./W_chromosome_identification/candidate_W/pseudohaplotype1.candidate_W.fasta
+python scaffold_list_extractor.py ./genome_crotalus_female/CV0650_10xAssembly_Round3_pseudohap.2.fasta ./W_chromosome_identification/CANDIDATE_W_pseudohap2_scaffold.list.txt ./W_chromosome_identification/candidate_W/pseudohaplotype2.candidate_W.fasta
+cat ./W_chromosome_identification/candidate_W/pseudohaplotype1.candidate_W.fasta ./W_chromosome_identification/candidate_W/pseudohaplotype2.candidate_W.fasta > ./W_chromosome_identification/candidate_W/Cviridis_CV0650_candidate_W.fasta
+```
+
 ## W chromosome annotation
+
+* Transcriptome assembly
+* Maker annotation run 1
+* Scaffold improvement with Agouti
+* Annotation run 2
+
+* Repeat annotation
 
 ## ZW gametolog divergence
 
