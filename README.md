@@ -381,7 +381,7 @@ tblastx -num_threads 4 -max_target_seqs 5 -max_hsps 1 -evalue 0.00001 -outfmt "6
 Extract reciprocal best BLAST hits using `RBH_comma.py` script, adapted from the script written by [Daren Card](https://github.com/darencard). 
 
 ```
-python RBH_comma.py ./divergence_crotalus_anolis/tblastx_anolis2crotalus.cds.txt ./divergence_crotalus_anolis/tblastx_crotalus2anolis.cds.txt ./divergence_crotalus_anolis/orthologs_crotalus_anolis.one2one.txt
+python ./python/RBH_comma.py ./divergence_crotalus_anolis/tblastx_anolis2crotalus.cds.txt ./divergence_crotalus_anolis/tblastx_crotalus2anolis.cds.txt ./divergence_crotalus_anolis/orthologs_crotalus_anolis.one2one.txt
 ```
 
 This identified 12,367 ortholog pairs.
@@ -393,6 +393,30 @@ grep -v 'scaffold-Z' ./divergence_crotalus_anolis/orthologs_crotalus_anolis.one2
 ```
 
 This keeps __11,277 autosomal ortholog pairs__.
+
+Extract fasta sequences for orthologs using `makeOrthoFasta.py`.
+
+```
+cd divergence_crotalus_anolis
+python ./python/makeOrthoFasta.py orthologs_crotalus_anolis.one2one.autosome.txt crotalus.cds.fasta anolis.cds.fasta
+```
+
+This writes sequence pairs to `./divergence_crotalus_anolis/ortholog_sequences/`.
+
+Run `translate_fasta.py` to translate nucleotide fastas to amino acid sequences.
+
+```
+for fasta in ./ortholog_sequences/*.fna; do python ./python/translate_fasta.py $fasta; done
+```
+
+#### Align 1:1 orthologs using Clustal Omega
+
+Run `alignClustal.sh` to align amino acid sequences.
+
+```
+sh alignClustal.sh ./ortholog_sequences ./ortholog_alignments
+```
+
 
 ### Identification of 1:1 ZW gametologs
 
