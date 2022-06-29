@@ -1,6 +1,6 @@
 # Rattlesnake W chromosome analysis
 
-This repository contains details on the data processing and analysis steps used to assemble, annotate, and characterize the female-specific W chromosome, including comparative genomic analyses with other caenophidian snake and amniote species. This workflow is a companion to the methods described in Schield et al. (in review).
+This repository contains details on the data processing and analysis steps used to assemble, annotate, and characterize the female-specific W chromosome of the prairie rattlesnake (_Crotalus viridis_), including comparative genomic analyses with other caenophidian snake and amniote species. This workflow is a companion to the methods described in Schield et al. (in review).
 
 Lists and reference files can be found in the `resources` directory. Shell and Python scripts are in `shell` and `python` directories, respectively. R scripts are in the `R` directory. Note that you may need to adjust the organization of path/file locations to suit your environment. This workflow assumes that you return to the main working directory after each major section.
 
@@ -32,14 +32,14 @@ Feel free to email me at drew.schield[at]colorado.edu with any questions.
 The analysis sections below use the following software and dependencies and assume they are on the user path:
 
 * [FastQC](https://github.com/s-andrews/FastQC)
-* [MultiQC](xxxx)
-* [10x Genomics Supernova](xxxx) (v2.1.1)
-* [NCBI BLAST](xxxx)
-* [MashMap](xxxx)
-* [Trinity](xxxx)
-* [Maker](xxxx)
-* [Agouti](xxxx)
-* [Repeatmasker](xxxx)
+* [MultiQC](https://multiqc.info/)
+* [10x Genomics Supernova](https://support.10xgenomics.com/de-novo-assembly/software/pipelines/latest/using/running) (v2.1.1)
+* [NCBI BLAST](https://www.ncbi.nlm.nih.gov/books/NBK279690/)
+* [MashMap](https://github.com/marbl/MashMap)
+* [Trinity](https://github.com/trinityrnaseq/trinityrnaseq/wiki)
+* [Maker](https://www.yandell-lab.org/software/maker.html)
+* [Agouti](https://github.com/svm-zhang/AGOUTI)
+* [Repeatmasker](https://www.repeatmasker.org/)
 * [trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic)
 * [bwa](http://bio-bwa.sourceforge.net/)
 * [htslib](http://www.htslib.org/)
@@ -47,8 +47,8 @@ The analysis sections below use the following software and dependencies and assu
 * [bgzip](http://www.htslib.org/)
 * [tabix](http://www.htslib.org/)
 * [bedtools](https://bedtools.readthedocs.io/en/latest/)
-* [mosdepth](xxxx)
-* [STAR](xxxx)
+* [mosdepth](https://github.com/brentp/mosdepth)
+* [STAR](https://github.com/alexdobin/STAR)
 * [R](https://cran.r-project.org/)
 
 Note, I installed a number of these programs to my [conda](https://docs.conda.io/en/latest/) environment.
@@ -68,6 +68,7 @@ Assess read quality using FastQC and summarize using MultiQC.
 ```
 mkdir fastq
 mkdir fastqc
+mkdir genome_crotalus_female
 ```
 
 Raw linked-read data for the female prairie rattlesnake should be placed in the `fastq` directory.
@@ -110,6 +111,20 @@ supernova mkoutput --style=pseudohap2 --asmdir=./CV0650_female_Cviridis/outs/ass
 ```
 
 ## Identification of W chromosome scaffolds
+
+Use homology with the male prairie rattlesnake reference genome and relative female/male read depths on female scaffolds to identify candidate W chromosome scaffolds.
+
+### Set up environment
+
+```
+mkdir genome_crotalus
+mkdir genome_crotalus_female
+```
+
+
+You can find the male 
+
+
 
 ## W chromosome annotation
 
