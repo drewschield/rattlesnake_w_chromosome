@@ -417,6 +417,50 @@ Run `alignClustal.sh` to align amino acid sequences.
 sh alignClustal.sh ./ortholog_sequences ./ortholog_alignments
 ```
 
+Generate codon-aware nucleotide alignments using PAL2NAL with `convertPAL2NAL.sh` script.
+
+```
+sh convertPAL2NAL.sh ./ortholog_alignments ./ortholog_sequences
+```
+
+Write a control file for PAML for each alignment using `ctlWrite.sh`.
+
+```
+sh ctlWrite.sh ./ortholog_alignments ./ctl ./codeml
+```
+
+PAML barfs on the long-format detailed names. These steps will ensure each of the files has simple 'crotalus' and 'anolis' sequence headers. The second sed command takes care of the anole entries because they all have '-' in them and the rattlesnake lines have already been overwritten.
+
+```
+for fasta in ./ortholog_sequences/*.fna; do sed -i '/-scaffold-/c\>crotalus' $fasta; sed -i '/-/c\>anolis' $fasta; done
+for fasta in ./ortholog_sequences/*.faa; do sed -i '/-scaffold-/c\>crotalus' $fasta; sed -i '/-/c\>anolis' $fasta; done
+for fasta in ./ortholog_alignments/*.pal2nal; do sed -i '/-scaffold-/c\crotalus' $fasta; sed -i '/-/c\anolis' $fasta; done
+```
+
+The aligned amino acids need a bit more attention, since gaps are denoted as '-':
+
+```
+for fasta in ./ortholog_alignments/*.faa; do sed -i '/-scaffold-/c\>crotalus' $fasta; sed -i '/_/c\>anolis' $fasta; done
+for fasta in ./ortholog_alignments/*.faa; do sed -i '/id-LOC/c\>anolis' $fasta; done
+```
+
+Check that headers have all been reformatted:
+
+```
+for i in ./ortholog_sequences/*.fna; do grep '>anolis' $i; done | wc -l
+for i in ./ortholog_sequences/*.faa; do grep '>anolis' $i; done | wc -l
+for i in ./ortholog_alignments/*.faa; do grep '>anolis' $i; done | wc -l	
+for i in ./ortholog_alignments/*.pal2nal; do grep 'anolis' $i; done | wc -l
+```
+
+All should equal 11,277.
+
+PICK UP HERE WITH CODEML DIVERGENCE CALCULATION
+PICK UP HERE WITH CODEML DIVERGENCE CALCULATION
+PICK UP HERE WITH CODEML DIVERGENCE CALCULATION
+PICK UP HERE WITH CODEML DIVERGENCE CALCULATION
+PICK UP HERE WITH CODEML DIVERGENCE CALCULATION
+
 
 ### Identification of 1:1 ZW gametologs
 
