@@ -98,7 +98,7 @@ Use Supernova to assembly linked-read data into pseudohaplotype scaffolds.
 
 The assembler is optimized to work with 56-fold coverage, requiring a number of input reads based on genome size and this coverage threshold. Using an estimated 1.5 Gb genome size for prairie rattlesnake, read lengths (150 bp) and 56-fold coverage, the number of input reads is as follows: <br />
 
-1,500,000,000 x 56 / 150 = 560,000,000 input reads.
+1,500,000,000 x 56 / *150 = 560,000,000 input reads*.
 
 ```
 supernova run --maxreads 560000000 --id=CV0650_female_Cviridis --fastqs=./fastq/
@@ -138,7 +138,8 @@ wget https://figshare.com/ndownloader/files/16522487 ./genome_crotalus/CroVir_ge
 
 ### Extract candidate W chromosome scaffolds using homology
 
-W-linked sequences should not have stringent high-similarity hits to autosomes. Instead, these should either have hits to the Z chromosome or not hit anything in the male reference. <br />
+W-linked sequences should not have stringent high-similarity hits to autosomes. Instead, these should either have hits to the Z chromosome or not hit anything in the male reference.
+
 Use mashmap to compare the female and male assemblies.
 
 ```
@@ -157,7 +158,14 @@ These lists can be found in `resources/CvvPseudo1_NoAutoHits_scaffIDs_02.27.20.t
 
 With a list of candidates based on homology, compare normalized read depths for a female and male across these scaffolds to find those with ratios expected for the female-specific W chromosome.
 
- 
+#### Test alternative methods for identifying sex-linked sequences
+
+Different statistical thresholds for deciding whether a scaffold is W-linked or not may have different power and false positive rates. Two common approaches are comparing the log2 ratio of normalized male:female read depth and comparing the proportion of reads mapping to a sequence from males versus females.
+
+Compare these methods using data from chicken, which has a known, contiguous W chromosome assembly.
+
+
+
 
 ## W chromosome annotation
 
