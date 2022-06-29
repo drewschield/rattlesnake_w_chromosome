@@ -29,6 +29,25 @@ Feel free to email me at drew.schield[at]colorado.edu with any questions.
 
 ## Software and dependencies
 
+The analysis sections below use the following software and dependencies and assume they are on the user path:
+
+* [FastQC](xxxx)
+* [MultiQC](xxxx)
+* [10x Genomics Supernova](xxxx)
+* [Trinity](xxxx)
+* [Maker](xxxx)
+* [Agouti](xxxx)
+* [Repeatmasker](xxxx)
+* [trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic)
+* [bwa](http://bio-bwa.sourceforge.net/)
+* [htslib](http://www.htslib.org/)
+* [samtools](http://www.htslib.org/)
+* [bgzip](http://www.htslib.org/)
+* [tabix](http://www.htslib.org/)
+* [bedtools](https://bedtools.readthedocs.io/en/latest/)
+* [STAR]()
+* [R](https://cran.r-project.org/)
+
 ## Female genome assembly
 
 ### 10x Genomics Chromium linked-read sequencing
