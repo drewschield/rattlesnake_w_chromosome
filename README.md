@@ -209,6 +209,16 @@ python ./python/fasta_seq_length.py ./genome_gallus/GCF_000002315.6_GRCg6a_genom
 bedtools makewindows -g ./genome_gallus/GCF_000002315.6_GRCg6a_genomic.scaffold_lengths.txt -w 10000 > ./genome_gallus/GCF_000002315.6_GRCg6a_genomic.10kb.window.bed
 ```
 
+Calculate mean depth per 10 kb window using mosdepth.
+
+```
+mosdepth -t 4 --fast-mode -n -b ./genome_gallus/GCF_000002315.6_GRCg6a_genomic.10kb.window.bed ./W_chromosome_identification/comparative_W_coverage/gallus/gallus_female_GRCg6a.10kb ./W_chromosome_identification/comparative_W_coverage/gallus/bam/gallus_female_GRCg6a.bam
+mosdepth -t 4 --fast-mode -n -b ./genome_gallus/GCF_000002315.6_GRCg6a_genomic.10kb.window.bed ./W_chromosome_identification/comparative_W_coverage/gallus/gallus_male_GRCg6a.10kb ./W_chromosome_identification/comparative_W_coverage/gallus/bam/gallus_male_GRCg6a.bam
+```
+
+
+
+
 
 
 
