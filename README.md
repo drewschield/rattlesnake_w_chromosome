@@ -355,10 +355,13 @@ cd ..
 
 #### Extract CDS sequences
 
-
-
 ```
+gffread -x ./divergence_crotalus_anolis/ortholog_sequences/anolis.cds.fasta -g ./genome_anolis/GCF_000090745.1_AnoCar2.0_genomic.fna ./genome_anolis/GCF_000090745.1_AnoCar2.0_genomic.gff
+grep -v '#' ./genome_crotalus/CroVir_rnd1.all.maker.final.homologIDs.gff | gffread -x ./divergence_crotalus_anolis/ortholog_sequences/crotalus.cds.fasta -g ./genome_crotalus/CroVir_genome_L77pg_16Aug2017.final_rename.fasta -
 ```
+
+The initial grep command for *Crotalus* removes the commented entries in the GFF (GffRead doesn't want to see these).
+
 
 ### Identification of 1:1 ZW gametologs
 
