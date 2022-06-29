@@ -100,9 +100,14 @@ The assembler is optimized to work with 56-fold coverage, requiring a number of 
 1,500,000,000 x 56 / 150 = 560,000,000 input reads.
 
 ```
-supernova
+supernova run --maxreads 560000000 --id=CV0650_female_Cviridis --fastqs=./fastq/
 ```
 
+Generate pseudohaplotype fasta assembly with a minimum scaffold length of 10 kb.
+
+```
+supernova mkoutput --style=pseudohap2 --asmdir=./CV0650_female_Cviridis/outs/assembly/ --outprefix=CV0650_female_Cviridis --minsize=10000 --headers=short 
+```
 
 ## Identification of W chromosome scaffolds
 
