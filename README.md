@@ -160,7 +160,11 @@ With a list of candidates based on homology, compare normalized read depths for 
 
 #### Test alternative methods for identifying sex-linked sequences
 
-Different statistical thresholds for deciding whether a scaffold is W-linked or not may have different power and false positive rates. Two common approaches are comparing the log2 ratio of normalized male:female read depth and comparing the proportion of reads mapping to a sequence from males versus females.
+Different statistical thresholds for deciding whether a scaffold is W-linked or not may have different power and false positive rates. Two common approaches are comparing the log2 ratio of normalized female:male read depth (log2FM) and comparing the proportion of reads mapping to a sequence from males versus females.
+
+Thresholds to compare are:
+* log2FM > 1
+* female mapping proportion > Q3 + 1.5*IQR
 
 Compare these methods using data from chicken, which has a known, contiguous W chromosome assembly.
 
