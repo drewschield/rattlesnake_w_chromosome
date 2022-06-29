@@ -159,7 +159,7 @@ These lists can be found in `resources/CvvPseudo1_NoAutoHits_scaffIDs_02.27.20.t
 
 With a list of candidates based on homology, compare normalized read depths for a female and male across these scaffolds to find those with ratios expected for the female-specific W chromosome.
 
-#### Compare alternative methods for identifying sex-linked sequences
+#### 1. Compare alternative methods for identifying sex-linked sequences
 
 Different statistical thresholds for deciding whether a scaffold is W-linked or not may have different power and false positive rates. Two common approaches are comparing the log2 ratio of normalized female:male read depth (log2FM) and comparing the proportion of reads mapping to a sequence from males versus females. Here, we can use known W-linked sequence from the chicken (_Gallus gallus_) to ground truth these thresholds and compare.
 
@@ -196,7 +196,7 @@ samtools index ./W_chromosome_identification/comparative_W_coverage/gallus/bam/g
 samtools index ./W_chromosome_identification/comparative_W_coverage/gallus/bam/gallus_male_GRCg6a.bam 
 ```
 
-#### Calculate mean scaffold length in female prairie rattlesnake assembly
+Calculate mean scaffold length in female prairie rattlesnake assembly
 
 The chicken scaffolds are highly contiguous and represent chromosomes. In order to make a reasonable comparison to the prairie rattlesnake female scaffolds, we can determine the mean length of female rattlesnake scaffolds, and make a bed file for the chicken genome with window sizes equal to this length.
 
