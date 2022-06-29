@@ -36,6 +36,7 @@ The analysis sections below use the following software and dependencies and assu
 * [10x Genomics Supernova](https://support.10xgenomics.com/de-novo-assembly/software/pipelines/latest/using/running) (v2.1.1)
 * [NCBI BLAST](https://www.ncbi.nlm.nih.gov/books/NBK279690/)
 * [MashMap](https://github.com/marbl/MashMap)
+* [SRA toolkit](https://github.com/ncbi/sra-tools)
 * [Trinity](https://github.com/trinityrnaseq/trinityrnaseq/wiki)
 * [Maker](https://www.yandell-lab.org/software/maker.html)
 * [Agouti](https://github.com/svm-zhang/AGOUTI)
@@ -158,15 +159,46 @@ These lists can be found in `resources/CvvPseudo1_NoAutoHits_scaffIDs_02.27.20.t
 
 With a list of candidates based on homology, compare normalized read depths for a female and male across these scaffolds to find those with ratios expected for the female-specific W chromosome.
 
-#### Test alternative methods for identifying sex-linked sequences
+#### Compare alternative methods for identifying sex-linked sequences
 
-Different statistical thresholds for deciding whether a scaffold is W-linked or not may have different power and false positive rates. Two common approaches are comparing the log2 ratio of normalized female:male read depth (log2FM) and comparing the proportion of reads mapping to a sequence from males versus females.
+Different statistical thresholds for deciding whether a scaffold is W-linked or not may have different power and false positive rates. Two common approaches are comparing the log2 ratio of normalized female:male read depth (log2FM) and comparing the proportion of reads mapping to a sequence from males versus females. Here, we can use known W-linked sequence from the chicken (_Gallus gallus_) to ground truth these thresholds and compare.
 
 Thresholds to compare are:
 * log2FM > 1
 * female mapping proportion > Q3 + 1.5*IQR
 
-Compare these methods using data from chicken, which has a known, contiguous W chromosome assembly.
+Retrieve chicken reference from NCBI and read data from SRA (accessions SRR958465 [male] and SRR958466 [female]).
+
+```
+mkdir genome_gallus
+cd genome_gallus
+wget https://ftp.ncbi.nlm.nih.gov/genomes/genbank/vertebrate_other/Gallus_gallus/latest_assembly_versions/GCA_000002315.5_GRCg6a/GCA_000002315.5_GRCg6a_genomic.fna.gz
+mkdir fastq
+cd fastq
+fastq-dump --split-files --gzip SRR958465
+fastq-dump --split-files --gzip SRR958466
+mv SRR958465_1.fastq.gz gallus_male_SRR958465_1.fastq.gz
+mv SRR958465_2.fastq.gz gallus_male_SRR958465_2.fastq.gz
+mv SRR958466_1.fastq.gz gallus_female_SRR958466_1.fastq.gz
+mv SRR958466_2.fastq.gz gallus_female_SRR958466_2.fastq.gz
+cd ..
+```
+
+Index reference, map reads, and index outputs.
+
+```
+bwa index ./genome_gallus/GCA_000002315.5_GRCg6a_genomic.fna
+mkdir ./W_chromosome_identification/comparative_W_coverage/gallus
+mkdir ./W_chromosome_identification/comparative_W_coverage/gallus/bam
+bwa mem -t 16 ./genome_gallus/GCF_000002315.6_GRCg6a_genomic.fna ./genome_gallus/fastq/gallus_male_SRR958465_1.fastq.gz ./genome_gallus/fastq/gallus_male_SRR958465_2.fastq.gz | samtools sort -O bam -T harp -o ./W_chromosome_identification/comparative_W_coverage/gallus/bam/gallus_male_GRCg6a.bam -
+bwa mem -t 16 ./genome_gallus/GCF_000002315.6_GRCg6a_genomic.fna ./genome_gallus/fastq/gallus_female_SRR958466_1.fastq.gz ./genome_gallus/fastq/gallus_female_SRR958466_2.fastq.gz | samtools sort -O bam -T inni -o ./W_chromosome_identification/comparative_W_coverage/gallus/bam/gallus_female_GRCg6a.bam -
+samtools index ./W_chromosome_identification/comparative_W_coverage/gallus/bam/gallus_female_GRCg6a.bam 
+samtools index ./W_chromosome_identification/comparative_W_coverage/gallus/bam/gallus_male_GRCg6a.bam 
+```
+
+#### Calculate mean scaffold length in female prairie rattlesnake assembly
+
+The chicken scaffolds are highly contiguous and represent chromosomes. In order to make a reasonable comparison to the prairie rattlesnake female scaffolds, we can determine the mean length of female rattlesnake scaffolds, and make a bed file for the chicken genome with window sizes equal to this length.
 
 
 
