@@ -107,7 +107,14 @@ supernova run --maxreads 560000000 --id=CV0650_female_Cviridis --fastqs=./fastq/
 Generate pseudohaplotype fasta assembly with a minimum scaffold length of 10 kb.
 
 ```
-supernova mkoutput --style=pseudohap2 --asmdir=./CV0650_female_Cviridis/outs/assembly/ --outprefix=CV0650_female_Cviridis --minsize=10000 --headers=short 
+supernova mkoutput --style=pseudohap2 --asmdir=./CV0650_female_Cviridis/outs/assembly/ --outprefix=CV0650_10xAssembly_Round3 --minsize=10000 --headers=short 
+```
+
+Move assembly to female genome directory and clean up intermediates.
+
+```
+mv ./CV0650_female_Cviridis/outs/assembly/CV0650_10xAssembly_Round3_pseudohap.*.fasta ./genome_crotalus_female
+rm -r ./CV0650_female_Cviridis/
 ```
 
 ## Identification of W chromosome scaffolds
@@ -117,14 +124,40 @@ Use homology with the male prairie rattlesnake reference genome and relative fem
 ### Set up environment
 
 ```
+mkdir W_chromosome_identification
 mkdir genome_crotalus
-mkdir genome_crotalus_female
 ```
 
+Retrieve the [assembly](https://figshare.com/ndownloader/files/16522091), [gene annotation](https://figshare.com/ndownloader/files/16522322), and [repeat annotation](https://figshare.com/ndownloader/files/16522487) for the male prairie rattlesnake reference. The assembly is also available from [NCBI]().
 
-You can find the male 
+```
+wget https://figshare.com/ndownloader/files/16522091 ./genome_crotalus/CroVir_genome_L77pg_16Aug2017.final_rename.fasta.gz
+wget https://figshare.com/ndownloader/files/16522322 ./genome_crotalus/CroVir_rnd1.all.maker.final.homologIDs.gff.gz 
+wget https://figshare.com/ndownloader/files/16522487 ./genome_crotalus/CroVir_genome_L77pg_16Aug2017.repeat.masked.final.out.gff3.gz
+```
 
+### Extract candidate W chromosome scaffolds using homology
 
+W-linked sequences should not have stringent high-similarity hits to autosomes. Instead, these should either have hits to the Z chromosome or not hit anything in the male reference. <br />
+Use mashmap to compare the female and male assemblies.
+
+```
+mashmap -r ./genome_crotalus/CroVir_genome_L77pg_16Aug2017.final_rename.fasta -q ./genome_crotalus/female/CV0650_10xAssembly_Round3_pseudohap.1.fasta -t 6 --perc_identity 95 -f one-to-one -o ./W_chromosome_identification/10xPsdo1_toCvv_pi95_1to1.mashmap.out
+mashmap -r ./genome_crotalus/CroVir_genome_L77pg_16Aug2017.final_rename.fasta -q ./genome_crotalus/female/CV0650_10xAssembly_Round3_pseudohap.2.fasta -t 6 --perc_identity 95 -f one-to-one -o ./W_chromosome_identification/10xPsdo2_toCvv_pi95_1to1.mashmap.out
+```
+
+From this can be parsed a list of female scaffolds meeting these expectations for W-linkage:
+* Not homologous to autosomes
+* Not homologous to the pseudoautosomal region (i.e., scaffold-Z:106800000-113984505)
+* Homology either to 1) the Z chromosome or 2) no hits to the male reference
+
+These lists can be found in `resources/CvvPseudo1_NoAutoHits_scaffIDs_02.27.20.txt` and `resources/CvvPseudo2_NoAutoHits_scaffIDs_02.27.20.txt`.
+
+### Use relative read depths for female and male to confirm W-linkage
+
+With a list of candidates based on homology, compare normalized read depths for a female and male across these scaffolds to find those with ratios expected for the female-specific W chromosome.
+
+ 
 
 ## W chromosome annotation
 
