@@ -34,6 +34,8 @@ The analysis sections below use the following software and dependencies and assu
 * [FastQC](xxxx)
 * [MultiQC](xxxx)
 * [10x Genomics Supernova](xxxx)
+* [NCBI BLAST](xxxx)
+* [MashMap](xxxx)
 * [Trinity](xxxx)
 * [Maker](xxxx)
 * [Agouti](xxxx)
@@ -45,8 +47,11 @@ The analysis sections below use the following software and dependencies and assu
 * [bgzip](http://www.htslib.org/)
 * [tabix](http://www.htslib.org/)
 * [bedtools](https://bedtools.readthedocs.io/en/latest/)
+* [mosdepth](xxxx)
 * [STAR]()
 * [R](https://cran.r-project.org/)
+
+Note, I installed a number of these programs to my [conda](https://docs.conda.io/en/latest/) environment.
 
 ## Female genome assembly
 
