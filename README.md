@@ -93,6 +93,17 @@ Run `multiqc_summary.R` for a visual summary of FastQC results using summary fil
 
 ### Assembly
 
+Use Supernova to assembly linked-read data into pseudohaplotype scaffolds.
+
+The assembler is optimized to work with 56-fold coverage, requiring a number of input reads based on genome size and this coverage threshold. Using an estimated 1.5 Gb genome size for prairie rattlesnake, read lengths (150 bp) and 56-fold coverage, the number of input reads is as follows: <br />
+
+1,500,000,000 x 56 / 150 = 560,000,000 input reads.
+
+```
+supernova
+```
+
+
 ## Identification of W chromosome scaffolds
 
 ## W chromosome annotation
