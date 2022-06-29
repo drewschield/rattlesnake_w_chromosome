@@ -200,7 +200,7 @@ Determine reasonable window size for analysis in chicken.
 
 The chicken scaffolds are highly contiguous. In order to make a reasonable comparison to the prairie rattlesnake female scaffolds, we can determine the mean length of female rattlesnake scaffolds, and make a bed file for the chicken genome with window sizes equal to this length.
 
-The mean female rattlesnake scaffold length is _10013.8 bp_, so setting chicken analysis to 10 kb windows seems reasonable.
+The mean female rattlesnake scaffold length is __10013.8 bp__, so setting chicken analysis to 10 kb windows seems reasonable.
 
 Make a bed file of chicken scaffolds in 10 kb windows after extracting 'genome' file using `python/fastq_seq_length.py` script.
 
