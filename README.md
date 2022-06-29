@@ -220,7 +220,7 @@ Examine results in R.
 
 Run `W_identification_power.R` to calculate power to detect W-linked sequence (and false positive rate) in the chicken using the log2FM and Q3 + 1.5*IQR methods.
 
-These analyses demonstrate that the log2FM >= 1 threshold method has high power and low false positive rate, and so will be used in the identification of candidate W scaffolds in prairie rattlesnake.
+These analyses demonstrate that the __log2FM >= 1__ threshold method has high power and low false positive rate, and so will be used in the identification of candidate W scaffolds in prairie rattlesnake.
 
 ## W chromosome annotation
 
