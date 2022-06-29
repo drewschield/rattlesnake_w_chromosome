@@ -305,6 +305,18 @@ cat ./W_chromosome_identification/candidate_W/pseudohaplotype1.candidate_W.fasta
 
 ## W chromosome annotation
 
+### Repeat elements
+
+Genomic repeats on the W chromosome were annotated using RepeatMasker leveraging the following databases:
+* Bov-B/CR1 LINE ([Pasquesi et al. 2018](https://www.nature.com/articles/s41467-018-05279-1))
+* RepBase release 20181026 ([Bao et al. 2015](https://link.springer.com/article/10.1186/s13100-015-0041-9))
+* Snake-specific library ([Schield et al. 2019](https://genome.cshlp.org/content/29/4/590))
+
+### Gene annotation
+
+Annotation of protein-coding genes included empirical evidence from a transcriptome assembly for prairie rattlesnake from [Schield et al. (2019)](https://genome.cshlp.org/content/29/4/590) and a novel transcriptome based on RNAseq data from female prairie rattlesnake tissues generated using Trinity.
+
+
 * Transcriptome assembly
 * Maker annotation run 1
 * Scaffold improvement with Agouti
