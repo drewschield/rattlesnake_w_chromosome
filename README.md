@@ -24,7 +24,7 @@ Feel free to email me at drew.schield[at]colorado.edu with any questions.
 * [Gene decay on the W chromosome](#gene-decay-on-the-w-chromosome)
 * [W-specific gene duplications](#w-specific-gene-duplications)
 * [Sex-linked divergence between pitvipers](#sex-linked-divergence-between-pitvipers)
-* [ZW gametolog GC3 analysis](#ZW gametolog GC3 analysis)
+* [ZW gametolog GC3 analysis](#zw-gametolog-GC3-analysis)
 * [Appendix: Indian cobra analysis](#appendix-1-indian-cobra-analysis) 
 
 ## Software and dependencies
