@@ -324,15 +324,6 @@ Repeat and gene annotations were repeated following scaffold improvement.
 
 The W chromosome assembly and annotation files are in the `resources/annotation/` directory. The assembly is also deposited at [NCBI](xxxx).
 
-
-
-* Transcriptome assembly
-* Maker annotation run 1
-* Scaffold improvement with Agouti
-* Annotation run 2
-
-* Repeat annotation
-
 ## ZW gametolog divergence
 
 ### Identification of 1:1 ZW gametologs
