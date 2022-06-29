@@ -202,7 +202,7 @@ The chicken scaffolds are highly contiguous. In order to make a reasonable compa
 
 The mean female rattlesnake scaffold length is __10013.8 bp__, so setting chicken analysis to 10 kb windows seems reasonable.
 
-Make a bed file of chicken scaffolds in 10 kb windows after extracting 'genome' file using `python/fastq_seq_length.py` script.
+Make a bed file of chicken scaffolds in 10 kb windows after extracting 'genome' file using the script `python/fastq_seq_length.py`.
 
 ```
 python ./python/fasta_seq_length.py ./genome_gallus/GCF_000002315.6_GRCg6a_genomic.fna > ./genome_gallus/GCF_000002315.6_GRCg6a_genomic.scaffold_lengths.txt
