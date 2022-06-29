@@ -224,6 +224,63 @@ Run `W_identification_power.R` to calculate power to detect W-linked sequence (a
 
 These analyses demonstrate that the __log2FM >= 1__ threshold method has high power and low false positive rate, and so will be used in the identification of candidate W scaffolds in prairie rattlesnake.
 
+#### 2. Calculate relative female:male coverage in prairie rattlesnake
+
+Set up environment.
+
+```
+mkdir W_chromosome_identification/coverage_exp_crotalus
+mkdir W_chromosome_identification/coverage_exp_crotalus/fastq
+mkdir W_chromosome_identification/coverage_exp_crotalus/bam
+```
+
+Retrieve read data for male and female prairie rattlesnakes.
+
+```
+./W_chromosome_identification/coverage_exp_crotalus/fastq/CV0007_S82_L004_R1_001.fastq.gz
+./W_chromosome_identification/coverage_exp_crotalus/fastq/CV0007_S82_L004_R1_001.fastq.gz
+./W_chromosome_identification/coverage_exp_crotalus/fastq/CV0011_S70_L004_R1_001.fastq.gz
+./W_chromosome_identification/coverage_exp_crotalus/fastq/CV0011_S70_L004_R1_001.fastq.gz
+```
+
+Index pseudohaplotype reference fasta files.
+
+```
+bwa index ./genome_crotalus_female/CV0650_10xAssembly_Round3_pseudohap.1.fasta
+bwa index ./genome_crotalus_female/CV0650_10xAssembly_Round3_pseudohap.2.fasta
+```
+
+Map to female reference.
+
+```
+bwa mem -t 16 ./genome_crotalus_female/CV0650_10xAssembly_Round3_pseudohap.1.fasta ./W_chromosome_identification/coverage_exp_crotalus/fastq/CV0007_S82_L004_R1_001.fastq.gz ./W_chromosome_identification/coverage_exp_crotalus/fastq/CV0007_S82_L004_R2_001.fastq.gz | samtools sort -O bam -T bimb -o ./W_chromosome_identification/coverage_exp_crotalus/bam/CV0007_CV0650_pseudohap1.bam -
+bwa mem -t 16 ./genome_crotalus_female/CV0650_10xAssembly_Round3_pseudohap.2.fasta ./W_chromosome_identification/coverage_exp_crotalus/fastq/CV0007_S82_L004_R1_001.fastq.gz ./W_chromosome_identification/coverage_exp_crotalus/fastq/CV0007_S82_L004_R2_001.fastq.gz | samtools sort -O bam -T chup -o ./W_chromosome_identification/coverage_exp_crotalus/bam/CV0007_CV0650_pseudohap2.bam -
+bwa mem -t 16 ./genome_crotalus_female/CV0650_10xAssembly_Round3_pseudohap.1.fasta ./W_chromosome_identification/coverage_exp_crotalus/fastq/CV0011_S70_L004_R1_001.fastq.gz ./W_chromosome_identification/coverage_exp_crotalus/fastq/CV0011_S70_L004_R2_001.fastq.gz | samtools sort -O bam -T flug -o ./W_chromosome_identification/coverage_exp_crotalus/bam/CV0011_CV0650_pseudohap1.bam -
+bwa mem -t 16 ./genome_crotalus_female/CV0650_10xAssembly_Round3_pseudohap.2.fasta ./W_chromosome_identification/coverage_exp_crotalus/fastq/CV0011_S70_L004_R1_001.fastq.gz ./W_chromosome_identification/coverage_exp_crotalus/fastq/CV0011_S70_L004_R2_001.fastq.gz | samtools sort -O bam -T posh -o ./W_chromosome_identification/coverage_exp_crotalus/bam/CV0011_CV0650_pseudohap2.bam -
+```
+
+Index output bam files.
+
+```
+samtools index ./W_chromosome_identification/coverage_exp_crotalus/bam/CV0011_CV0650_pseudohap1.bam
+samtools index ./W_chromosome_identification/coverage_exp_crotalus/bam/CV0011_CV0650_pseudohap2.bam
+samtools index ./W_chromosome_identification/coverage_exp_crotalus/bam/CV0007_CV0650_pseudohap1.bam
+samtools index ./W_chromosome_identification/coverage_exp_crotalus/bam/CV0007_CV0650_pseudohap2.bam
+```
+
+Calculate mean depth per scaffold using mosdepth.
+
+```
+mosdepth -t 4 --fast-mode -n ./W_chromosome_identification/coverage_exp_crotalus/CV0011_CV0650_pseudohap1 ./W_chromosome_identification/coverage_exp_crotalus/bam/CV0011_CV0650_pseudohap1.bam
+mosdepth -t 4 --fast-mode -n ./W_chromosome_identification/coverage_exp_crotalus/CV0011_CV0650_pseudohap2 ./W_chromosome_identification/coverage_exp_crotalus/bam/CV0011_CV0650_pseudohap2.bam
+mosdepth -t 4 --fast-mode -n ./W_chromosome_identification/coverage_exp_crotalus/CV0007_CV0650_pseudohap1 ./W_chromosome_identification/coverage_exp_crotalus/bam/CV0007_CV0650_pseudohap1.bam
+mosdepth -t 4 --fast-mode -n ./W_chromosome_identification/coverage_exp_crotalus/CV0007_CV0650_pseudohap2 ./W_chromosome_identification/coverage_exp_crotalus/bam/CV0007_CV0650_pseudohap2.bam
+```
+
+Examine results and identify candidate W chromosome scaffolds in R.
+
+Run `W_identification_crotalus.R` to compare normalized female:male read depths, parse scaffolds with log2FM > 1, and cross-reference with candidate W scaffolds from homology search.
+
 ## W chromosome annotation
 
 ## ZW gametolog divergence
