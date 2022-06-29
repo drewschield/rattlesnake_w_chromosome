@@ -312,9 +312,18 @@ Genomic repeats on the W chromosome were annotated using RepeatMasker leveraging
 * RepBase release 20181026 ([Bao et al. 2015](https://link.springer.com/article/10.1186/s13100-015-0041-9))
 * Snake-specific library ([Schield et al. 2019](https://genome.cshlp.org/content/29/4/590))
 
-### Gene annotation
+### Gene annotation and transcript-based scaffold improvement
 
-Annotation of protein-coding genes included empirical evidence from a transcriptome assembly for prairie rattlesnake from [Schield et al. (2019)](https://genome.cshlp.org/content/29/4/590) and a novel transcriptome based on RNAseq data from female prairie rattlesnake tissues generated using Trinity.
+Annotation of protein-coding genes included empirical evidence from a transcriptome assembly for prairie rattlesnake from [Schield et al. (2019)](https://genome.cshlp.org/content/29/4/590) and a novel transcriptome based on RNAseq data from female prairie rattlesnake tissues generated using Trinity. Additional empirical evidence came from protein datasets for [*Anolis carolinensis*](https://www.nature.com/articles/nature10390), [*Python molurus bivittatus*](https://www.pnas.org/doi/abs/10.1073/pnas.1314475110), [*Thamnophis sirtalis*](https://academic.oup.com/gbe/article/10/8/2110/5061318?login=true), [*Ophiophagus hannah*](https://www.pnas.org/doi/abs/10.1073/pnas.1314702110), and [*Deinagkistrodon acutus*](https://www.nature.com/articles/ncomms13107).
+
+Empirical evidence was used in an initial annotation using MAKER using default settings, except for specifying `max_dna_len=300000` and `split_hit=20000`. The results were used to optimize gene prediction parameters in Augustus, then passed to a second run of MAKER.
+
+The *de novo* transcriptome and candidate W assembly data were used to improve contiguity of W chromosome scaffolds using Agouti.
+
+Repeat and gene annotations were repeated following scaffold improvement.
+
+The W chromosome assembly and annotation files are in the `resources/annotation/` directory. The assembly is also deposited at [NCBI](xxxx).
+
 
 
 * Transcriptome assembly
