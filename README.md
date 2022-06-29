@@ -31,9 +31,9 @@ Feel free to email me at drew.schield[at]colorado.edu with any questions.
 
 The analysis sections below use the following software and dependencies and assume they are on the user path:
 
-* [FastQC](xxxx)
+* [FastQC](https://github.com/s-andrews/FastQC)
 * [MultiQC](xxxx)
-* [10x Genomics Supernova](xxxx)
+* [10x Genomics Supernova](xxxx) (v2.1.1)
 * [NCBI BLAST](xxxx)
 * [MashMap](xxxx)
 * [Trinity](xxxx)
@@ -48,7 +48,7 @@ The analysis sections below use the following software and dependencies and assu
 * [tabix](http://www.htslib.org/)
 * [bedtools](https://bedtools.readthedocs.io/en/latest/)
 * [mosdepth](xxxx)
-* [STAR]()
+* [STAR](xxxx)
 * [R](https://cran.r-project.org/)
 
 Note, I installed a number of these programs to my [conda](https://docs.conda.io/en/latest/) environment.
@@ -57,7 +57,19 @@ Note, I installed a number of these programs to my [conda](https://docs.conda.io
 
 ### 10x Genomics Chromium linked-read sequencing
 
+We generated a 10x Genomics Chromium library for a female prairie rattlesnake from snap-frozen liver tissue. The library was sequenced on an Illumina NovaSeq 6000 using 150 bp paired-end reads.
+
 ### FastQC/MultiQC analysis
+
+Assess read quality using FastQC.
+
+#### Set up environment
+
+
+
+
+
+
 
 ### Assembly
 
