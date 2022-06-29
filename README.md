@@ -196,12 +196,18 @@ samtools index ./W_chromosome_identification/comparative_W_coverage/gallus/bam/g
 samtools index ./W_chromosome_identification/comparative_W_coverage/gallus/bam/gallus_male_GRCg6a.bam 
 ```
 
-Calculate mean scaffold length in female prairie rattlesnake assembly
+Determine reasonable window size for analysis in chicken.
 
-The chicken scaffolds are highly contiguous and represent chromosomes. In order to make a reasonable comparison to the prairie rattlesnake female scaffolds, we can determine the mean length of female rattlesnake scaffolds, and make a bed file for the chicken genome with window sizes equal to this length.
+The chicken scaffolds are highly contiguous. In order to make a reasonable comparison to the prairie rattlesnake female scaffolds, we can determine the mean length of female rattlesnake scaffolds, and make a bed file for the chicken genome with window sizes equal to this length.
 
+The mean female rattlesnake scaffold length is *10013.8 bp*, so setting chicken analysis to 10 kb windows seems reasonable.
 
+Make a bed file of chicken scaffolds in 10 kb windows after extracting 'genome' file using `python/fastq_seq_length.py` script.
 
+```
+python ./python/fasta_seq_length.py ./genome_gallus/GCF_000002315.6_GRCg6a_genomic.fna > ./genome_gallus/GCF_000002315.6_GRCg6a_genomic.scaffold_lengths.txt
+bedtools makewindows -g ./genome_gallus/GCF_000002315.6_GRCg6a_genomic.scaffold_lengths.txt -w 10000 > ./genome_gallus/GCF_000002315.6_GRCg6a_genomic.10kb.window.bed
+```
 
 ## W chromosome annotation
 
