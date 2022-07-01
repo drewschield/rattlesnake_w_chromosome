@@ -759,7 +759,7 @@ Run `slidingwindow_cpg.py` to quantify CpG content in 10 kb windows.
 python slidingwindow_cpg.py ../genome_crotalus/CroVir_genome_L77pg_16Aug2017.fasta 10000 10000 CroVir_genome.CpG.10kb.txt
 ```
 
-
+Compare distributions of GC and CpG content on autosomes and the sex chromosomes in `W_chromosome_composition.R`.
 
 
 ## Repeat content
