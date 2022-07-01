@@ -2,7 +2,7 @@
 
 ![Rattlesnake W chromosome analysis](/cover-image.png "cover image")
 
-This repository contains details on the data processing and analysis steps used to assemble, annotate, and characterize the female-specific W chromosome of the prairie rattlesnake (_Crotalus viridis_), including comparative genomic analyses with other caenophidian snake and amniote species. This workflow is a companion to the methods described in Schield et al. (in review).
+This repository contains details on the data processing and analysis steps used to assemble, annotate, and characterize the female-specific W chromosome of the prairie rattlesnake (_Crotalus viridis_), including comparative genomic analyses with other caenophidian snake and amniote species. This workflow is a companion to the methods described in Schield et al. (_in review_).
 
 Lists and reference files can be found in the `resources` directory. Shell and Python scripts are in `shell` and `python` directories, respectively. R scripts are in the `R` directory. Note that you may need to adjust the organization of path/file locations to suit your environment. This workflow assumes that you return to the main working directory after each major section.
 
@@ -719,6 +719,31 @@ mosdepth -t 4 --fast-mode -n -b CroVir_Dovetail_10kb_window.ChromAssigned.bed -f
 Run `comparative_coverage_4species.R` to examine log2FM ratios across the Z chromosome in each species.
 
 ## GC and CpG content
+
+With identified W-linked scaffolds, comparisons of GC and CpG content can be made between autosomal, Z-linked, and W-linked regions of the genome.
+
+### 1. GC and CpG content in prairie rattlesnake
+
+#### Set up environment
+
+```
+mkdir gc
+cd gc
+```
+
+#### Calculate GC and CpG content per W chromosome scaffold
+
+Run `scaffold_gc.py` to quantify GC content for each scaffold.
+
+```
+$python scaffold_gc.py ../resources/annotation/Cviridis_CV0650_candidate_W.rescaffold.rename.fasta Cviridis_CV0650_candidate_W.rescaffold.rename.GC.txt
+```
+
+Run `scaffold_cpg.py` to quantify CpG content for each W chromosome scaffold.
+
+```
+python scaffold_cpg.py ../resources/annotation/Cviridis_CV0650_candidate_W.rescaffold.rename.fasta Cviridis_CV0650_candidate_W.rescaffold.rename.CpG.txt
+```
 
 ## Repeat content
 
