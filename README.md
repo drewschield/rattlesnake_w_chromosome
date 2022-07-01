@@ -330,7 +330,7 @@ The W chromosome assembly and annotation files are in the `resources/annotation/
 
 We can investigate divergence between ZW gametologs and the presence of evolutionary strata based on spatial clustering of gametolog pairs with similar divergence along the Z chromosome.
 
-### Estimation of a lineage-specific mutation rate
+### 1. Estimation of a lineage-specific mutation rate
 
 First, use divergence between rattlesnake and anole lizard 1:1 orthologs and their known divergence time to calculate a mutation rate estimate to scale divergence estimates between ZW gametologs.
 
@@ -474,7 +474,11 @@ sh parseCodeml.sh > crotalus_anolis_ortholog.autosome.dnds.txt
 
 Run `divergence_crotalus_anolis.R` to convert divergence estimates to time, including tranformation to account sex-linked mutation rates.
 
-### Identification of 1:1 ZW gametologs
+An alternative generalized squamate mutation rate from four-fold degenerate sites is available from [Green et al. (2014)](https://www.science.org/doi/full/10.1126/science.1254449).
+
+### 2. Identification of 1:1 ZW gametologs in prairie rattlesnake
+
+
 
 ## Comparative Z chromosome mapping in caenophidian snakes
 
