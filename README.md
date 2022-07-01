@@ -555,6 +555,41 @@ The columns of the output are in the following order:
 
 chromosome, start position, end position, W transcript, Z transcript, annotation details
 
+### 3. Alignment of ZW gametologs
+
+#### Set up environment
+
+```
+cd ./divergence/crotalus/
+mkdir ZW_gametolog_seq
+mkdir ZW_gametolog_aln
+```
+
+#### Extract ZW gametolog sequence files
+
+Run `make_ZW_gametolog_fasta.py` to write fasta file per ZW gametolog pair.
+
+```
+python make_ZW_gametolog_fasta.py gametologs.cds.one2one.Z_geneID_coordinates.txt chrZ.cds.fasta chrW.cds.fasta
+```
+
+This writes the output files to the `ZW_gametolog_seq` directory.
+
+#### Translate sequences to amino acid
+
+Run `translate_gametolog_fasta.py` on input nucleotide fasta files.
+
+```
+for fasta in ZW_gametolog_seq/*.fna; do python translate_gametolog_fasta.py $fasta; done
+```
+
+#### Align ZW gametologs
+
+First, run `alignClustal_gametologs.sh` to align amino acid sequences using Clustal Omega.
+
+```
+sh alignClustal_gametologs.sh ZW_gametolog_seq ZW_gametolog_aln
+```
 
 
 ## Comparative Z chromosome mapping in caenophidian snakes
