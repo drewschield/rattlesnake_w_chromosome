@@ -606,10 +606,26 @@ mkdir ctl
 mkdir codeml
 ```
 
+#### Generate CODEML control files
+
 Run `ctlWrite_gametologs.sh` to generate control files for analysis of each alignment, specifying the directories with alignments, control files, and where the results of codeml will be written.
 
 ```
 sh ctlWrite_gametologs.sh ZW_gametolog_aln ctl codeml
+```
+
+#### Perform CODEML analyses
+
+Run CODEML to calculate divergence statistics per alignment.
+
+```
+for control in ./ctl/*.ctl; do codeml $control; done
+```
+
+Parse CODEML results using `parseCodeml_gametologs.sh`.
+
+```
+sh parseCodeml_gametologs.sh > crotalusZW_gametolog.dnds.txt
 ```
 
 ## Comparative Z chromosome mapping in caenophidian snakes
