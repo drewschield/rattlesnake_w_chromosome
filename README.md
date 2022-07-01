@@ -478,6 +478,49 @@ An alternative generalized squamate mutation rate from four-fold degenerate site
 
 ### 2. Identification of 1:1 ZW gametologs in prairie rattlesnake
 
+Identify 1:1 gametologs on the Z and W chromosomes to estimate divergence.
+
+#### Set up environment
+
+```
+mkdir divergence
+mkdir divergence/crotalus/
+cd ./divergence/crotalus/
+```
+
+#### Extract Z and W chromosome CDS sequences
+
+```
+grep 'scaffold-Z' ../../genome_crotalus/CroVir_rnd1.all.maker.final.homologIDs.gff | gffread -x chrZ.cds.fasta -g ../../genome_crotalus/CroVir_genome_L77pg_16Aug2017.final_rename.fasta -
+gffread -x chrW.cds.fasta -g ../../resources/annotation/Cviridis_CV0650_candidate_W.rescaffold.rename.fasta ../../resources/annotation/croVir_Wscaff_rnd2_alt.all.maker.noseq.gff3
+```
+
+#### Make BLAST databases for CDS sequences
+
+```
+makeblastdb -dbtype nucl -in chrZ.cds.fasta
+makeblastdb -dbtype nucl -in chrW.cds.fasta
+```
+
+#### Perform reciprocal tBLASTx searches
+
+```
+tblastx -num_threads 8 -max_hsps 1 -evalue 0.00001 -outfmt "6 qacc sacc evalue bitscore qstart qend sstart send" -db chrW.cds.fasta -query chrZ.cds.fasta -out tblastx_Z2W.cds.txt
+tblastx -num_threads 8 -max_hsps 1 -evalue 0.00001 -outfmt "6 qacc sacc evalue bitscore qstart qend sstart send" -db chrZ.cds.fasta -query chrW.cds.fasta -out tblastx_W2Z.cds.txt
+```
+
+#### Process results using `RBH_comma.py` script
+
+```
+python RBH_comma.py tblastx_Z2W.cds.txt tblastx_W2Z.cds.txt gametologs.cds.one2one.txt
+```
+
+Format a tab-delimited version to paste together with gene coordinate and annotation details.
+
+```
+sed 's/,/\t/g' gametologs.cds.one2one.txt > gametologs.cds.one2one.fix.txt
+```
+
 
 
 ## Comparative Z chromosome mapping in caenophidian snakes
@@ -505,4 +548,45 @@ An alternative generalized squamate mutation rate from four-fold degenerate site
 ## ZW gametolog GC3 analysis
 
 ## Appendix: Indian cobra analysis
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
