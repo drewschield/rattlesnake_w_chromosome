@@ -456,11 +456,21 @@ for i in ./ortholog_alignments/*.pal2nal; do grep 'anolis' $i; done | wc -l
 
 All should equal 11,277.
 
-#### Run CODEML to calculate divergence statistics per alignment
+#### Calculate divergence statistics using CODEML
+
+Run CODEML on each alignment, calling the respective control file.
 
 ```
 for control in ./ctl/*.ctl; do codeml
 ```
+
+Run `parseCodeml.sh` to write a table of divergence statistics for all of the alignments.
+
+```
+sh parseCodeml.sh > crotalus_anolis_ortholog.autosome.dnds.txt
+```
+
+
 
 ### Identification of 1:1 ZW gametologs
 
