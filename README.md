@@ -52,6 +52,7 @@ The analysis sections below use the following software and dependencies and assu
 * [bedtools](https://bedtools.readthedocs.io/en/latest/)
 * [mosdepth](https://github.com/brentp/mosdepth)
 * [GffRead](https://github.com/gpertea/gffread)
+* [PAML](http://abacus.gene.ucl.ac.uk/software/paml.html)
 * [STAR](https://github.com/alexdobin/STAR)
 * [R](https://cran.r-project.org/)
 
@@ -455,12 +456,11 @@ for i in ./ortholog_alignments/*.pal2nal; do grep 'anolis' $i; done | wc -l
 
 All should equal 11,277.
 
-PICK UP HERE WITH CODEML DIVERGENCE CALCULATION
-PICK UP HERE WITH CODEML DIVERGENCE CALCULATION
-PICK UP HERE WITH CODEML DIVERGENCE CALCULATION
-PICK UP HERE WITH CODEML DIVERGENCE CALCULATION
-PICK UP HERE WITH CODEML DIVERGENCE CALCULATION
+#### Run CODEML to calculate divergence statistics per alignment
 
+```
+for control in ./ctl/*.ctl; do codeml
+```
 
 ### Identification of 1:1 ZW gametologs
 
