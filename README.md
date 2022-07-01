@@ -461,16 +461,18 @@ All should equal 11,277.
 Run CODEML on each alignment, calling the respective control file.
 
 ```
-for control in ./ctl/*.ctl; do codeml
+for control in ./ctl/*.ctl; do codeml $control; done
 ```
 
-Run `parseCodeml.sh` to write a table of divergence statistics for all of the alignments.
+Run `parseCodeml.sh` to write a table of divergence statistics for all of the alignments. This calls the `parse_codeml_output.py` script available [here](https://github.com/faylward/dnds), modified to print 'NA's for filtered results.
 
 ```
 sh parseCodeml.sh > crotalus_anolis_ortholog.autosome.dnds.txt
 ```
 
+#### Convert of rattlesnake-anole divergence estimates to time
 
+Run ``
 
 ### Identification of 1:1 ZW gametologs
 
