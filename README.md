@@ -521,6 +521,40 @@ Format a tab-delimited version to paste together with gene coordinate and annota
 sed 's/,/\t/g' gametologs.cds.one2one.txt > gametologs.cds.one2one.fix.txt
 ```
 
+#### Obtain Z chromosome locations for 1:1 gametologs
+
+Coordinates are needed for ZW gametolog pairs to interpret divergence estimates in the context of the Z chromosome.
+
+Extract gene IDs from the Z chromosome CDS.
+
+```
+grep '>' chrZ.cds.fasta | cut -d'>' -f2 > cds.Z_geneID.list
+```
+
+Query GFF for coordinates of each gene.
+
+```
+touch cds.Z_geneID_coordinates.txt; for mrna in `cat cds.Z_geneID.list`; do grep -w "$mrna" ../../genome_crotalus/CroVir_rnd1.all.maker.final.homologIDs.gff | awk 'BEGIN{OFS="\t"} $3 == "mRNA" {print $1,$4,$5,$9}' - >> cds.Z_geneID_coordinates.txt; done
+```
+
+Note that the fourth column also contain the transcript IDs.
+
+Extract Z chromosome coordinates for ZW gametolog pairs.
+
+```
+touch ZW_homology.Z_geneID_coordinates.txt; cat gametologs.cds.one2one.txt | while read line; do chrz=`echo $line | cut -d, -f2`; grep -w $chrz cds.Z_geneID_coordinates.txt >> ZW_homology.Z_geneID_coordinates.txt; done
+```
+
+Paste coordinates for ZW gametologs to annotation details.
+
+```
+pr -mts$'\t' <(cut -f1,2,3 ZW_homology.Z_geneID_coordinates.txt) gametologs.cds.one2one.fix.txt <(cut -f4 ZW_homology.Z_geneID_coordinates.txt) > gametologs.cds.one2one.Z_geneID_coordinates.txt
+```
+
+The columns of the output are in the following order:
+
+chromosome, start position, end position, W transcript, Z transcript, annotation details
+
 
 
 ## Comparative Z chromosome mapping in caenophidian snakes
