@@ -630,6 +630,19 @@ sh parseCodeml_gametologs.sh > crotalusZW_gametolog.dnds.txt
 
 ## Comparative Z chromosome mapping in caenophidian snakes
 
+Comparison of female and male read depths across the Z chromosome can reveal differences in relative timing of recombination suppression between the sex chromosomes if compared between different ZW snake species. This section contains details of the analysis comparing log2FM ratios in pitvipers to garter snake (_Thamnophis_).
+
+### 1. Retrieve read data for snake species
+
+These analyses will use read data for prairie rattlesnake described [above](#identification-of-w-chromosome-scaffolds), five-pace viper (_Deinagkistrodon acutus_) from [Yin et al. (2016)](https://www.nature.com/articles/ncomms13107), and pygmy rattlesnake (_Sistrurus miliarius_) and western terrestiral garter snake (_Thamnophis elegans_) from [Vicoso et al. (2013)](https://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.1001643). 
+
+
+
+
+
+
+
+
 ## GC and CpG content
 
 ## Repeat content
