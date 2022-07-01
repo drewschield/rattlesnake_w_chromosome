@@ -209,7 +209,7 @@ The mean female rattlesnake scaffold length is __10013.8 bp__, so setting chicke
 Make a bed file of chicken scaffolds in 10 kb windows after extracting 'genome' file using the script `fastq_seq_length.py`.
 
 ```
-python ./python/fasta_seq_length.py ./genome_gallus/GCF_000002315.6_GRCg6a_genomic.fna > ./genome_gallus/GCF_000002315.6_GRCg6a_genomic.scaffold_lengths.txt
+python fasta_seq_length.py ./genome_gallus/GCF_000002315.6_GRCg6a_genomic.fna > ./genome_gallus/GCF_000002315.6_GRCg6a_genomic.scaffold_lengths.txt
 bedtools makewindows -g ./genome_gallus/GCF_000002315.6_GRCg6a_genomic.scaffold_lengths.txt -w 10000 > ./genome_gallus/GCF_000002315.6_GRCg6a_genomic.10kb.window.bed
 ```
 
@@ -300,8 +300,8 @@ Extract sequence for candidate W scaffolds using `scaffold_list_extractor.py`.
 
 ```
 mkdir ./W_chromosome_identification/candidate_W/
-python ./python/scaffold_list_extractor.py ./genome_crotalus_female/CV0650_10xAssembly_Round3_pseudohap.1.fasta ./W_chromosome_identification/CANDIDATE_W_pseudohap1_scaffold.list.txt ./W_chromosome_identification/candidate_W/pseudohaplotype1.candidate_W.fasta
-python ./python/scaffold_list_extractor.py ./genome_crotalus_female/CV0650_10xAssembly_Round3_pseudohap.2.fasta ./W_chromosome_identification/CANDIDATE_W_pseudohap2_scaffold.list.txt ./W_chromosome_identification/candidate_W/pseudohaplotype2.candidate_W.fasta
+python scaffold_list_extractor.py ./genome_crotalus_female/CV0650_10xAssembly_Round3_pseudohap.1.fasta ./W_chromosome_identification/CANDIDATE_W_pseudohap1_scaffold.list.txt ./W_chromosome_identification/candidate_W/pseudohaplotype1.candidate_W.fasta
+python scaffold_list_extractor.py ./genome_crotalus_female/CV0650_10xAssembly_Round3_pseudohap.2.fasta ./W_chromosome_identification/CANDIDATE_W_pseudohap2_scaffold.list.txt ./W_chromosome_identification/candidate_W/pseudohaplotype2.candidate_W.fasta
 cat ./W_chromosome_identification/candidate_W/pseudohaplotype1.candidate_W.fasta ./W_chromosome_identification/candidate_W/pseudohaplotype2.candidate_W.fasta > ./W_chromosome_identification/candidate_W/Cviridis_CV0650_candidate_W.fasta
 ```
 
@@ -382,7 +382,7 @@ tblastx -num_threads 4 -max_target_seqs 5 -max_hsps 1 -evalue 0.00001 -outfmt "6
 Extract reciprocal best BLAST hits using `RBH_comma.py` script, adapted from the script written by [Daren Card](https://github.com/darencard). 
 
 ```
-python ./python/RBH_comma.py ./divergence_crotalus_anolis/tblastx_anolis2crotalus.cds.txt ./divergence_crotalus_anolis/tblastx_crotalus2anolis.cds.txt ./divergence_crotalus_anolis/orthologs_crotalus_anolis.one2one.txt
+python RBH_comma.py ./divergence_crotalus_anolis/tblastx_anolis2crotalus.cds.txt ./divergence_crotalus_anolis/tblastx_crotalus2anolis.cds.txt ./divergence_crotalus_anolis/orthologs_crotalus_anolis.one2one.txt
 ```
 
 This identified 12,367 ortholog pairs.
@@ -399,7 +399,7 @@ Extract fasta sequences for orthologs using `makeOrthoFasta.py`.
 
 ```
 cd divergence_crotalus_anolis
-python ./python/makeOrthoFasta.py orthologs_crotalus_anolis.one2one.autosome.txt crotalus.cds.fasta anolis.cds.fasta
+python makeOrthoFasta.py orthologs_crotalus_anolis.one2one.autosome.txt crotalus.cds.fasta anolis.cds.fasta
 ```
 
 This writes sequence pairs to `./divergence_crotalus_anolis/ortholog_sequences/`.
@@ -472,7 +472,7 @@ sh parseCodeml.sh > crotalus_anolis_ortholog.autosome.dnds.txt
 
 #### Convert of rattlesnake-anole divergence estimates to time
 
-Run ``
+Run `divergence_crotalus_anolis.R` to convert divergence estimates to time, including tranformation to account sex-linked mutation rates.
 
 ### Identification of 1:1 ZW gametologs
 
