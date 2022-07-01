@@ -761,6 +761,58 @@ python slidingwindow_cpg.py ../genome_crotalus/CroVir_genome_L77pg_16Aug2017.fas
 
 Compare distributions of GC and CpG content on autosomes and the sex chromosomes in `W_chromosome_composition.R`.
 
+### 2. GC and CpG content in other amniotes
+
+Here, compare autosomal and sex-linked GC content between prairie rattlesnake, birds, and mammals.
+
+#### Set up environment
+
+```
+cd ./
+mkdir genome_taenopygia
+mkdir genome_homo
+mkdir genome_mus
+```
+
+#### Retrieve genome data
+
+```
+cd ./genome_taeniopygia
+wget https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/008/822/105/GCF_008822105.2_bTaeGut2.pat.W.v2/GCF_008822105.2_bTaeGut2.pat.W.v2_genomic.fna.gz
+gunzip GCF_008822105.2_bTaeGut2.pat.W.v2_genomic.fna.gz 
+
+cd ../genome_homo
+wget https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/001/405/GCF_000001405.39_GRCh38.p13/GCF_000001405.39_GRCh38.p13_genomic.fna.gz
+gunzip GCF_000001405.39_GRCh38.p13_genomic.fna.gz 
+
+cd ../genome_mus
+wget https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/001/635/GCF_000001635.27_GRCm39/GCF_000001635.27_GRCm39_genomic.fna.gz
+gunzip GCF_000001635.27_GRCm39_genomic.fna.gz
+```
+
+The chicken genome is already in the `./genome_gallus/` directory.
+
+#### Calculate GC content for each genome in 10 kb windows
+
+```
+python slidingwindow_gc_content.py ./genome_gallus/GCF_000002315.6_GRCg6a_genomic.fna 10000 10000 ./gc/genome_gallus.GC.10kb.txt
+python slidingwindow_gc_content.py ./genome_taeniopygia/GCF_008822105.2_bTaeGut2.pat.W.v2_genomic.fna 10000 10000 ./gc/genome_taeniopygia.GC.10kb.txt
+python slidingwindow_gc_content.py ./genome_homo/GCF_000001405.39_GRCh38.p13_genomic.fna 10000 10000 ./gc/genome_homo.GC.10kb.txt
+python slidingwindow_gc_content.py ./genome_mus/GCF_000001635.27_GRCm39_genomic.fna 10000 10000 ./gc/genome_mus.GC.10kb.txt
+```
+
+#### Calculate CpG content for each genome in 10 kb windows
+
+```
+python slidingwindow_cpg.py ./genome_gallus/GCF_000002315.6_GRCg6a_genomic.fna 10000 10000 ./gc/genome_gallus.CpG.10kb.txt
+python slidingwindow_cpg.py ./genome_taeniopygia/GCF_008822105.2_bTaeGut2.pat.W.v2_genomic.fna 10000 10000 ./gc/genome_taeniopygia.CpG.10kb.txt
+python slidingwindow_cpg.py ./genome_homo/GCF_000001405.39_GRCh38.p13_genomic.fna 10000 10000 ./gc/genome_homo.CpG.10kb.txt
+python slidingwindow_cpg.py ./genome_mus/GCF_000001635.27_GRCm39_genomic.fna 10000 10000 ./gc/genome_mus.CpG.10kb.txt
+```
+
+#### Analysis of GC/CpG content across amniotes
+
+Run `GC_CpG_content_autosomes_sex-chromosomes.R` to compare distributions of GC and CpG content on autosomes and sex chromosomes across the sampled species.
 
 ## Repeat content
 

@@ -35,7 +35,7 @@ cvv.cpg.z <- cvv.cpg.z[which(cvv.cpg.z$start<106800000),]
 
 cvv.rep.w <- read.table('./repeats/Cviridis_CV0650_candidate_W.repeat_content_mdg4.txt',header=T)
 
-cvv.rep <- read.table('./repeats/CroVir_genome.mdg4.10kb.txt',header=T)
+cvv.rep <- read.table('./repeats/CroVir_genome.repeat_content_mdg4.10kb.txt',header=T)
 cvv.rep.a <- cvv.rep[which(cvv.rep$chrom!='scaffold-Z'),]
 cvv.rep.z <- cvv.rep[which(cvv.rep$chrom=='scaffold-Z'),]
 cvv.rep.z <- cvv.rep.z[which(cvv.rep.z$start<106800000),]
@@ -45,7 +45,7 @@ snake.mdg <- read.table('./repeats/snake_repeat_library/Snakes_Known_TElib.GC.md
 snake.l1 <- read.table('./repeats/snake_repeat_library/Snakes_Known_TElib.GC.L1-CIN4.filter.txt',header=T)
 snake.CR1 <- read.table('./repeats/snake_repeat_library/Snakes_Known_TElib.GC.L2-CR1-Rex.filter.txt',header=T)
 
-# Repeat ages (from RpeatMasker output)
+# Repeat ages (from RepeatMasker output)
 z.age <- read.csv('./repeats/CroVir_Z_18Snake.csv',header=T)
 w.age <- read.csv('./repeats/CroVir_W_18Snake.csv',header=T)
 
@@ -123,35 +123,35 @@ boxplot(cvv.cpg.a$CpG_content,cvv.cpg.z$CpG_content,cvv.cpg.w$CpG_content,medcol
 
 ### Analysis of repeat elements--------------------------------------------------
 
-# UPDATE/REFORMAT WHILE WORKING ON REPEAT SECTIONS ON GITHUB
-# UPDATE/REFORMAT WHILE WORKING ON REPEAT SECTIONS ON GITHUB
-# UPDATE/REFORMAT WHILE WORKING ON REPEAT SECTIONS ON GITHUB
+# UNDER CONSTRUCTION
+# UNDER CONSTRUCTION
+# UNDER CONSTRUCTION
 
-mean(cvv.rep.w$prop_Gypsy)
-sd(cvv.rep.w$prop_Gypsy.DIRS)
+mean(cvv.rep.w$prop_mdg4)
+sd(cvv.rep.w$prop_mdg4)
 
-mean(cvv.rep.z$DIRS.Gypsy_proportion)
-sd(cvv.rep.z$DIRS.Gypsy_proportion)
+mean(cvv.rep.z$mdg4_proportion)
+sd(cvv.rep.z$mdg4_proportion)
 
-mean(cvv.rep.a$DIRS.Gypsy_proportion)
-sd(cvv.rep.a$DIRS.Gypsy_proportion)
+mean(cvv.rep.a$mdg4_proportion)
+sd(cvv.rep.a$mdg4_proportion)
 
-# Does W have higher DIRS/Gypsy content than the Z?
-wilcox.test(cvv.rep.w$prop_Gypsy.DIRS,cvv.rep.z$DIRS.Gypsy_proportion)
+# Does W have higher DIRS/mdg4 content than the Z?
+wilcox.test(cvv.rep.w$prop_mdg4,cvv.rep.z$mdg4_proportion)
 # Holy smokes, yes.
 
-# Does W have higher DIRS/Gypsy content than autosomes?
-wilcox.test(cvv.rep.w$prop_Gypsy.DIRS,cvv.rep.a$DIRS.Gypsy_proportion)
-# You bet your ass it does.
+# Does W have higher DIRS/mdg4 content than autosomes?
+wilcox.test(cvv.rep.w$prop_mdg4,cvv.rep.a$mdg4_proportion)
+# You bet it does.
 
-# Does Z have higher DIRS/Gypsy content than autosomes?
-wilcox.test(cvv.rep.z$DIRS.Gypsy_proportion,cvv.rep.a$DIRS.Gypsy_proportion)
+# Does Z have higher DIRS/mdg4 content than autosomes?
+wilcox.test(cvv.rep.z$mdg4_proportion,cvv.rep.a$mdg4_proportion)
 # It sure does.
 
 # Make a boxplot
-boxplot(cvv.rep.a$DIRS.Gypsy_proportion,cvv.rep.z$DIRS.Gypsy_proportion,cvv.rep.w$prop_Gypsy.DIRS,medcol='black',col=alpha(c('grey','seagreen','navy'),0.7),lwd=1.5,names=c('Autosomes','Z','W'),pch=20,ylab='Proportion DIRS/Gypsy')
+boxplot(cvv.rep.a$mdg4_proportion,cvv.rep.z$mdg4_proportion,cvv.rep.w$prop_mdg4,medcol='black',col=alpha(c('grey','seagreen','navy'),0.7),lwd=1.5,names=c('Autosomes','Z','W'),pch=20,ylab='Proportion mdg4')
 
-# Holy shit the W is nuts.
+# Holy smokes the W is nuts.
 
 ### Comparison of GC content and DIRS/Gypsy elements------------------------------
 
