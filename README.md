@@ -591,6 +591,26 @@ First, run `alignClustal_gametologs.sh` to align amino acid sequences using Clus
 sh alignClustal_gametologs.sh ZW_gametolog_seq ZW_gametolog_aln
 ```
 
+Then run `convertPAL2NAL_gametologs.sh` to convert to codon-based nucleotide alignments.
+
+```
+sh convertPAL2NAL_gametologs.sh ZW_gametolog_aln ZW_gametolog_seq
+```
+
+### 4. Analysis of ZW gametologs in CODEML
+
+#### Set up environment
+
+```
+mkdir ctl
+mkdir codeml
+```
+
+Run `ctlWrite_gametologs.sh` to generate control files for analysis of each alignment, specifying the directories with alignments, control files, and where the results of codeml will be written.
+
+```
+sh ctlWrite_gametologs.sh ZW_gametolog_aln ctl codeml
+```
 
 ## Comparative Z chromosome mapping in caenophidian snakes
 
