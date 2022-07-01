@@ -636,12 +636,87 @@ Comparison of female and male read depths across the Z chromosome can reveal dif
 
 These analyses will use read data for prairie rattlesnake described [above](#identification-of-w-chromosome-scaffolds), five-pace viper (_Deinagkistrodon acutus_) from [Yin et al. (2016)](https://www.nature.com/articles/ncomms13107), and pygmy rattlesnake (_Sistrurus miliarius_) and western terrestiral garter snake (_Thamnophis elegans_) from [Vicoso et al. (2013)](https://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.1001643). 
 
+#### Set up environment
 
+```
+mkdir coverage
+mkdir coverage/fastq/
+mkdir coverage/bam/
+mkdir coverage/mosdepth_results/
+cd coverage
+```
 
+#### Download read data for other species from NCBI SRA
 
+```
+fastq-dump --split-files --gzip ./fastq/SRR941260
+fastq-dump --split-files --gzip ./fastq/SRR941259
+fastq-dump --split-files --gzip ./fastq/SRR3223535
+fastq-dump --split-files --gzip ./fastq/SRR3223527
+fastq-dump --split-files --gzip ./fastq/SRR941263
+fastq-dump --split-files --gzip ./fastq/SRR941261
+```
 
+Rename fastq files with species/sex identifiers.
 
+```
+mv ./fastq/SRR941260_1.fastq.gz ./fastq/thamnophis_mDNA_1.fastq.gz
+mv ./fastq/SRR941260_2.fastq.gz ./fastq/thamnophis_mDNA_2.fastq.gz
+mv ./fastq/SRR941259_1.fastq.gz ./fastq/thamnophis_fDNA_1.fastq.gz
+mv ./fastq/SRR941259_2.fastq.gz ./fastq/thamnophis_fDNA_2.fastq.gz
+mv ./fastq/SRR3223535_1.fastq.gz ./fastq/deinagkistrodon_mDNA_1.fastq.gz
+mv ./fastq/SRR3223535_2.fastq.gz ./fastq/deinagkistrodon_mDNA_2.fastq.gz
+mv ./fastq/SRR3223527_1.fastq.gz ./fastq/deinagkistrodon_fDNA_1.fastq.gz
+mv ./fastq/SRR3223527_2.fastq.gz ./fastq/deinagkistrodon_fDNA_2.fastq.gz
+mv ./fastq/SRR941263_1.fastq.gz ./fastq/sistrurus_mDNA_1.fastq.gz
+mv ./fastq/SRR941263_2.fastq.gz ./fastq/sistrurus_mDNA_2.fastq.gz
+mv ./fastq/SRR941261_1.fastq.gz ./fastq/sistrurus_fDNA_1.fastq.gz
+mv ./fastq/SRR941261_2.fastq.gz ./fastq/sistrurus_fDNA_2.fastq.gz
+```
 
+#### Map reads to the rattlesnake genome
+
+```
+bwa mem -t 4 ../genome_crotalus/CroVir_genome_L77pg_16Aug2017.fasta ./fastq/thamnophis_mDNA_1.fastq.gz ./fastq/thamnophis_mDNA_2.fastq.gz | samtools sort -O bam -T male -o ./bam/thamnophis_mDNA.bam -
+bwa mem -t 4 ../genome_crotalus/CroVir_genome_L77pg_16Aug2017.fasta ./fastq/thamnophis_fDNA_1.fastq.gz ./fastq/thamnophis_fDNA_2.fastq.gz | samtools sort -O bam -T female -o ./bam/thamnophis_fDNA.bam -
+bwa mem -t 4 ../genome_crotalus/CroVir_genome_L77pg_16Aug2017.fasta ./fastq/deinagkistrodon_mDNA_1.fastq.gz ./fastq/deinagkistrodon_mDNA_2.fastq.gz | samtools sort -O bam -T male -o ./bam/deinagkistrodon_mDNA.bam -
+bwa mem -t 4 ../genome_crotalus/CroVir_genome_L77pg_16Aug2017.fasta ./fastq/deinagkistrodon_fDNA_1.fastq.gz ./fastq/deinagkistrodon_fDNA_2.fastq.gz | samtools sort -O bam -T female -o ./bam/deinagkistrodon_fDNA.bam -
+bwa mem -t 4 ../genome_crotalus/CroVir_genome_L77pg_16Aug2017.fasta ./fastq/sistrurus_mDNA_1.fastq.gz ./fastq/sistrurus_mDNA_2.fastq.gz | samtools sort -O bam -T male -o ./bam/sistrurus_mDNA.bam -
+bwa mem -t 4 ../genome_crotalus/CroVir_genome_L77pg_16Aug2017.fasta ./fastq/sistrurus_fDNA_1.fastq.gz ./fastq/sistrurus_fDNA_2.fastq.gz | samtools sort -O bam -T female -o ./bam/sistrurus_fDNA.bam -
+bwa mem -t 4 ../genome_crotalus/CroVir_genome_L77pg_16Aug2017.fasta ../W_chromosome_identification/coverage_exp_crotalus/fastq/CV0007_S82_L004_R1_001.fastq.gz ../W_chromosome_identification/coverage_exp_crotalus/fastq/CV0007_S82_L004_R2_001.fastq.gz | samtools sort -O bam -T bimb -o ./bam/crotalus_mDNA.bam -
+bwa mem -t 4 ../genome_crotalus/CroVir_genome_L77pg_16Aug2017.fasta ../W_chromosome_identification/coverage_exp_crotalus/fastq/CV0011_S70_L004_R1_001.fastq.gz ../W_chromosome_identification/coverage_exp_crotalus/fastq/CV0011_S70_L004_R2_001.fastq.gz | samtools sort -O bam -T flug -o ./bam/crotalus_fDNA.bam -
+```
+
+#### Filter mapping quality
+
+Filter using samtools.
+
+```
+for map in ./bam/*.bam; do name=`echo $map | cut -d'/' -f3 | cut -d'.' -f1`; samtools view -q 30 -b $map > ./bam/$name.q30.bam; done
+```
+
+Index results.
+
+```
+for i in ./bam/*.q30.bam; do samtools index $i; done
+```
+
+#### Run mosdepth analysis
+
+Perform analyses in 10 kb sliding windows using coordinates in `resources/CroVir_Dovetail_10kb_window.ChromAssigned.bed`.
+
+```
+mosdepth -t 4 --fast-mode -n -b CroVir_Dovetail_10kb_window.ChromAssigned.bed -f ../genome_crotalus/CroVir_genome_L77pg_16Aug2017.fasta ./mosdepth_results/thamnophis_mDNA ./bam/thamnophis_mDNA.bam
+mosdepth -t 4 --fast-mode -n -b CroVir_Dovetail_10kb_window.ChromAssigned.bed -f ../genome_crotalus/CroVir_genome_L77pg_16Aug2017.fasta ./mosdepth_results/thamnophis_fDNA ./bam/thamnophis_fDNA.bam
+mosdepth -t 4 --fast-mode -n -b CroVir_Dovetail_10kb_window.ChromAssigned.bed -f ../genome_crotalus/CroVir_genome_L77pg_16Aug2017.fasta ./mosdepth_results/deinagkistrodon_mDNA ./bam/deinagkistrodon_mDNA.bam
+mosdepth -t 4 --fast-mode -n -b CroVir_Dovetail_10kb_window.ChromAssigned.bed -f ../genome_crotalus/CroVir_genome_L77pg_16Aug2017.fasta ./mosdepth_results/deinagkistrodon_fDNA ./bam/deinagkistrodon_fDNA.bam
+mosdepth -t 4 --fast-mode -n -b CroVir_Dovetail_10kb_window.ChromAssigned.bed -f ../genome_crotalus/CroVir_genome_L77pg_16Aug2017.fasta ./mosdepth_results/sistrurus_mDNA ./bam/sistrurus_mDNA.bam
+mosdepth -t 4 --fast-mode -n -b CroVir_Dovetail_10kb_window.ChromAssigned.bed -f ../genome_crotalus/CroVir_genome_L77pg_16Aug2017.fasta ./mosdepth_results/sistrurus_fDNA ./bam/sistrurus_fDNA.bam
+mosdepth -t 4 --fast-mode -n -b CroVir_Dovetail_10kb_window.ChromAssigned.bed -f ../genome_crotalus/CroVir_genome_L77pg_16Aug2017.fasta ./mosdepth_results/crotalus_mDNA ./bam/crotalus_mDNA.bam
+mosdepth -t 4 --fast-mode -n -b CroVir_Dovetail_10kb_window.ChromAssigned.bed -f ../genome_crotalus/CroVir_genome_L77pg_16Aug2017.fasta ./mosdepth_results/crotalus_fDNA ./bam/crotalus_fDNA.bam
+```
+
+Run `comparative_coverage_4species.R` to examine log2FM ratios across the Z chromosome in each species.
 
 ## GC and CpG content
 
