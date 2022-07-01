@@ -745,6 +745,23 @@ Run `scaffold_cpg.py` to quantify CpG content for each W chromosome scaffold.
 python scaffold_cpg.py ../resources/annotation/Cviridis_CV0650_candidate_W.rescaffold.rename.fasta Cviridis_CV0650_candidate_W.rescaffold.rename.CpG.txt
 ```
 
+#### Calculate GC and CpG content in sliding windows on autosomes and Z chromosome
+
+Run `slidingwindow_gc.py` to quantify GC content in 10 kb windows.
+
+```
+python slidingwindow_gc.py ../genome_crotalus/CroVir_genome_L77pg_16Aug2017.fasta 10000 10000 CroVir_genome.GC.10kb.txt
+```
+
+Run `slidingwindow_cpg.py` to quantify CpG content in 10 kb windows.
+
+```
+python slidingwindow_cpg.py ../genome_crotalus/CroVir_genome_L77pg_16Aug2017.fasta 10000 10000 CroVir_genome.CpG.10kb.txt
+```
+
+
+
+
 ## Repeat content
 
 ## mdg4 retroelement GC-richness
