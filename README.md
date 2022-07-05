@@ -314,6 +314,22 @@ Genomic repeats on the W chromosome were annotated using RepeatMasker leveraging
 * RepBase release 20181026 ([Bao et al. 2015](https://link.springer.com/article/10.1186/s13100-015-0041-9))
 * Snake-specific library ([Schield et al. 2019](https://genome.cshlp.org/content/29/4/590))
 
+### De novo transcriptome assembly
+We assembled a *de novo* transcriptome using RNA-seq data from 18 female tissue samples (See Supplementary Table S2).
+
+#### Subsampling reads with seqtk
+Reads were randomly subsampled using [seqtk](www.github.com/lh3/seqtk) to retain 2 million reads per sample. 
+```bash
+# Example command:
+seqtk sample -s100 Hrt_24h_CV8_Cvv11_GGCTAC__R1_merged.fastq.gz 2000000 > subsample/Hrt_24h_CV8_Cvv11_GGCTAC__R1_merged.subsamp.fastq
+```
+
+#### Transcriptome assembly with Trinity
+[Trinity](https://github.com/trinityrnaseq/trinityrnaseq) was used to assemble a transcriptome using the --trimmomatic flag to incorporate upfront quality trimming and otherwise default parameters.
+```bash
+./trinityrnaseq_r20140717/Trinity --seqType fq --JM 70G --trimmomatic --CPU 12 --SS_lib_type FR --left ./raw_reads/subsample/Hrt_24h_CV8_Cvv11_GGCTAC__R1_merged.subsamp.fastq ./raw_reads/subsample/Hrt_96h_CV10_Cvv15_CCGTCC__R1_merged.subsamp.fastq ./raw_reads/subsample/Hrt_96h_CV11_Cvv16_GTAGAG__R1_merged.subsamp.fastq ./raw_reads/subsample/Hrt_96h_CV9_Cvv14_ATGTCA__R1_merged.subsamp.fastq ./raw_reads/subsample/Kid_24h_CV3_Cvv19_CAGGCG_L005_R1_001.subsamp.fastq ./raw_reads/subsample/Kid_24h_CV8_Cvv17_CACGAT_L005_R1_001.subsamp.fastq ./raw_reads/subsample/Kid_96h_CV10_Cvv24_CTAGCT_L005_R1_001.subsamp.fastq ./raw_reads/subsample/Kid_96h_CV11_Cvv21_CATTTT_L005_R1_001.subsamp.fastq ./raw_reads/subsample/Kid_96h_CV9_Cvv23_CGGAAT_L005_R1_001.subsamp.fastq ./raw_reads/subsample/liver_24h_CV3_Cvv08_CGTACG_L005_R1_001.subsamp.fastq ./raw_reads/subsample/Liver_24h_CV8_Cvv05_GTGAAA_L005_R1_001.subsamp.fastq ./raw_reads/subsample/liver_96h_CV10_Cvv11_ACTGAT_L005_R1_001.subsamp.fastq ./raw_reads/subsample/liver_96h_CV11_Cvv10_GGTAGC_L005_R1_001.subsamp.fastq ./raw_reads/subsample/Liver_96h_CV9_Cvv12_ATGAGC_L005_R1_001.subsamp.fastq ./raw_reads/subsample/SI_24h_CV8_Cvv05_ACAGTG__R1_merged.subsamp.fastq ./raw_reads/subsample/SI_96h_CV11_Cvv08_ACTTGA__R1_merged.subsamp.fastq ./raw_reads/subsample/SI_96h_CV9_Cvv07_CAGATC__R1_merged.subsamp.fastq --right ./raw_reads/subsample/Hrt_24h_CV8_Cvv11_GGCTAC__R2_merged.subsamp.fastq ./raw_reads/subsample/Hrt_96h_CV10_Cvv15_CCGTCC__R2_merged.subsamp.fastq ./raw_reads/subsample/Hrt_96h_CV11_Cvv16_GTAGAG__R2_merged.subsamp.fastq ./raw_reads/subsample/Hrt_96h_CV9_Cvv14_ATGTCA__R2_merged.subsamp.fastq ./raw_reads/subsample/Kid_24h_CV3_Cvv19_CAGGCG_L005_R2_001.subsamp.fastq ./raw_reads/subsample/Kid_24h_CV8_Cvv17_CACGAT_L005_R2_001.subsamp.fastq ./raw_reads/subsample/Kid_96h_CV10_Cvv24_CTAGCT_L005_R2_001.subsamp.fastq ./raw_reads/subsample/Kid_96h_CV11_Cvv21_CATTTT_L005_R2_001.subsamp.fastq ./raw_reads/subsample/Kid_96h_CV9_Cvv23_CGGAAT_L005_R2_001.subsamp.fastq ./raw_reads/subsample/liver_24h_CV3_Cvv08_CGTACG_L005_R2_001.subsamp.fastq ./raw_reads/subsample/liver_24h_CV8_Cvv05_GTGAAA_L005_R2_001.subsamp.fastq ./raw_reads/subsample/liver_96h_CV10_Cvv11_ACTGAT_L005_R2_001.subsamp.fastq ./raw_reads/subsample/liver_96h_CV11_Cvv10_GGTAGC_L005_R2_001.subsamp.fastq ./raw_reads/subsample/liver_96h_CV9_Cvv12_ATGAGC_L005_R2_001.subsamp.fastq ./raw_reads/subsample/SI_24h_CV8_Cvv05_ACAGTG__R2_merged.subsamp.fastq ./raw_reads/subsample/SI_96h_CV11_Cvv08_ACTTGA__R2_merged.subsamp.fastq ./raw_reads/subsample/SI_96h_CV9_Cvv07_CAGATC__R2_merged.subsamp.fastq
+```
+
 ### Gene annotation and transcript-based scaffold improvement
 
 Annotation of protein-coding genes included empirical evidence from a transcriptome assembly for prairie rattlesnake from [Schield et al. (2019)](https://genome.cshlp.org/content/29/4/590) and a novel transcriptome based on RNAseq data from female prairie rattlesnake tissues generated using Trinity. Additional empirical evidence came from protein datasets for [*Anolis carolinensis*](https://www.nature.com/articles/nature10390), [*Python molurus bivittatus*](https://www.pnas.org/doi/abs/10.1073/pnas.1314475110), [*Thamnophis sirtalis*](https://academic.oup.com/gbe/article/10/8/2110/5061318?login=true), [*Ophiophagus hannah*](https://www.pnas.org/doi/abs/10.1073/pnas.1314702110), and [*Deinagkistrodon acutus*](https://www.nature.com/articles/ncomms13107).
@@ -825,6 +841,411 @@ Run `GC_CpG_content_autosomes_sex-chromosomes.R` to compare distributions of GC 
 ## Toxicity index analysis
 
 ## Gene expression analysis
+
+For inquiries about the following gene expression analyses, please contact blair.perry[at]wsu.edu
+
+#### 1. Map RNA-seq data to updated genome annotation
+Quality trim raw RNA-seq reads with [Trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic). This step was also used to give each sample a simpler alias (i.e., Kid_24h_CV3_Cvv19_CAGGCG -> kidneyF1).
+```bash
+trimmomatic PE Cvv29_TACAGC_L005_R1_001.fastq.gz Cvv29_TACAGC_L005_R2_001.fastq.gz testes_forward_paired.fq.gz testes_forward_unpaired.fq.gz testes_reverse_paired.fq.gz testes_reverse_unpaired.fq.gz ILLUMINACLIP:TruSeq3-PE.fa:2:30:10:2:keepBothReads LEADING:3 TRAILING:3 MINLEN:36
+trimmomatic PE Cvv35_AAACAC_L005_R1_001.fastq.gz Cvv35_AAACAC_L005_R2_001.fastq.gz ovaries_forward_paired.fq.gz ovaries_forward_unpaired.fq.gz ovaries_reverse_paired.fq.gz ovaries_reverse_unpaired.fq.gz ILLUMINACLIP:TruSeq3-PE.fa:2:30:10:2:keepBothReads LEADING:3 TRAILING:3 MINLEN:36
+trimmomatic PE Kid_24h_CV3_Cvv19_CAGGCG_L005_R1_001.fastq.gz Kid_24h_CV3_Cvv19_CAGGCG_L005_R2_001.fastq.gz kidneyF1_forward_paired.fq.gz kidneyF1_forward_unpaired.fq.gz kidneyF1_reverse_paired.fq.gz kidneyF1_reverse_unpaired.fq.gz ILLUMINACLIP:TruSeq3-PE.fa:2:30:10:2:keepBothReads LEADING:3 TRAILING:3 MINLEN:36
+trimmomatic PE Kid_24h_CV5_Cvv18_CACTCA_L005_R1_001.fastq.gz Kid_24h_CV5_Cvv18_CACTCA_L005_R2_001.fastq.gz kidneyM1_forward_paired.fq.gz kidneyM1_forward_unpaired.fq.gz kidneyM1_reverse_paired.fq.gz kidneyM1_reverse_unpaired.fq.gz ILLUMINACLIP:TruSeq3-PE.fa:2:30:10:2:keepBothReads LEADING:3 TRAILING:3 MINLEN:36
+trimmomatic PE Kid_24h_CV6_Cvv20_CATGGC_L005_R1_001.fastq.gz Kid_24h_CV6_Cvv20_CATGGC_L005_R2_001.fastq.gz kidneyM2_forward_paired.fq.gz kidneyM2_forward_unpaired.fq.gz kidneyM2_reverse_paired.fq.gz kidneyM2_reverse_unpaired.fq.gz ILLUMINACLIP:TruSeq3-PE.fa:2:30:10:2:keepBothReads LEADING:3 TRAILING:3 MINLEN:36
+trimmomatic PE Kid_24h_CV8_Cvv17_CACGAT_L005_R1_001.fastq.gz Kid_24h_CV8_Cvv17_CACGAT_L005_R2_001.fastq.gz kidneyF2_forward_paired.fq.gz kidneyF2_forward_unpaired.fq.gz kidneyF2_reverse_paired.fq.gz kidneyF2_reverse_unpaired.fq.gz ILLUMINACLIP:TruSeq3-PE.fa:2:30:10:2:keepBothReads LEADING:3 TRAILING:3 MINLEN:36
+trimmomatic PE liver_24h_CV3_Cvv08_CGTACG_L005_R1_001.fastq.gz liver_24h_CV3_Cvv08_CGTACG_L005_R2_001.fastq.gz liverF1_forward_paired.fq.gz liverF1_forward_unpaired.fq.gz liverF1_reverse_paired.fq.gz liverF1_reverse_unpaired.fq.gz ILLUMINACLIP:TruSeq3-PE.fa:2:30:10:2:keepBothReads LEADING:3 TRAILING:3 MINLEN:36
+trimmomatic PE liver_24h_CV5_Cvv07_GTTTCG_L005_R1_001.fastq.gz liver_24h_CV5_Cvv07_GTTTCG_L005_R2_001.fastq.gz liverM1_forward_paired.fq.gz liverM1_forward_unpaired.fq.gz liverM1_reverse_paired.fq.gz liverM1_reverse_unpaired.fq.gz ILLUMINACLIP:TruSeq3-PE.fa:2:30:10:2:keepBothReads LEADING:3 TRAILING:3 MINLEN:36
+trimmomatic PE Liver_24h_CV6_Cvv06_GTGGCC_L005_R1_001.fastq.gz liver_24h_CV6_Cvv06_GTGGCC_L005_R2_001.fastq.gz liverM2_forward_paired.fq.gz liverM2_forward_unpaired.fq.gz liverM2_reverse_paired.fq.gz liverM2_reverse_unpaired.fq.gz ILLUMINACLIP:TruSeq3-PE.fa:2:30:10:2:keepBothReads LEADING:3 TRAILING:3 MINLEN:36
+trimmomatic PE Liver_24h_CV8_Cvv05_GTGAAA_L005_R1_001.fastq.gz liver_24h_CV8_Cvv05_GTGAAA_L005_R2_001.fastq.gz liverF2_forward_paired.fq.gz liverF2_forward_unpaired.fq.gz liverF2_reverse_paired.fq.gz liverF2_reverse_unpaired.fq.gz ILLUMINACLIP:TruSeq3-PE.fa:2:30:10:2:keepBothReads LEADING:3 TRAILING:3 MINLEN:36
+```
+
+Convert updated GFF file (including original + new W chromosome annotation) to GTF format with [gffread](https://github.com/gpertea/gffread).
+```bash
+gffread CroVir_rnd1.all.maker.final.homologIDs.updatedNov2019.withWannot.sort.gff -T -F -o crovir_wWannot.gtf
+```
+
+Generate genome index files needed for mapping with [STAR](https://github.com/alexdobin/STAR).
+```bash
+STAR --runMode genomeGenerate --runThreadN 24 --genomeDir ./reference/index --genomeFastaFiles ./reference/CroVir_genome_L77pg_16Aug2017.final_rename.withWscaffs.fasta --sjdbGTFfile ./reference/crovir_wWannot.gtf 
+```
+
+Map trimmed RNA-seq reads to the genome using STAR. Note, an example command is shown below for a female kidney sample; this command was run separately for each of the 10 RNA-seq samples used in these analyses. 
+```bash
+# Mapping with STAR (Example command for Kidney F1 sample)
+STAR --genomeDir ./reference/index --runThreadN 12 --outFilterMultimapNmax 1 --outFilterMismatchNmax 1 --outFilterMismatchNoverLmax 0.1 --twopassMode Basic --sjdbGTFfile ./reference/ref1_origAndW/crovir_wWannot.gtf --quantMode GeneCounts --readFilesCommand zcat --outSAMtype BAM SortedByCoordinate --outFileNamePrefix ./STAR_mapped/kidneyF1 --readFilesIn ./trimmed/paired/kidneyF1_forward_paired.fq.gz ./trimmed/paired/kidneyF1_reverse_paired.fq.gz
+```
+
+Quantify reads using [featureCounts](http://subread.sourceforge.net/). Note that the GTF file generated by gffread above has gene identifiers in the 'transcript_id' field, and therefore the flag `-g transcript_id` in the following command results in gene-level counts (not transcript-level). 
+```bash
+featureCounts -p -t exon -g transcript_id -a ./reference/crovir_wWannot.gtf -o .raw_counts/cvv_ref1_rawCounts_12.18.21.txt STAR_mapped/*Aligned.sortedByCoord.out.bam 
+```
+
+#### 2. Assess "detectable" expression in male and female samples.
+Assess whether genes are detected (raw count > 0) in male and female samples.
+Note: The following code is all run within R. 
+
+Load packages.
+```R
+library(tidyverse)
+library(DESeq2)
+library(pheatmap)
+library(viridis)
+library(IHW)
+library(scico)
+library(WebGestaltR)
+```
+
+Read in table with ZW gametolog information.
+```R
+zw.geneInfo <- readxl::read_xlsx('CVV_Wchrom_FunctionalAnalyses_March2022/W_genes_Zpositions.xlsx') %>% janitor::clean_names()
+```
+
+Read in raw counts from featureCounts and reformat into simple dataframe.
+```R
+autoZW.unique.raw_counts <- read_tsv('raw_counts/cvv_ref1_rawCounts_12.18.21.txt',comment = '#') %>% 
+  janitor::clean_names() %>% # clean up header names
+  select(-2,-3,-4,-5) # remove unnecessary columns
+
+names(autoZW.unique.raw_counts) <- str_remove_all(names(autoZW.unique.raw_counts),'ref1_unique_star_mapped_|aligned_sorted_by_coord_out_bam|_aligned_sorted_by_coord_out_bam') # further clean up headers
+
+autoZW.unique.raw_counts.simple <- as.data.frame(autoZW.unique.raw_counts[,-c(1,2)])
+row.names(autoZW.unique.raw_counts.simple) <- autoZW.unique.raw_counts$geneid
+```
+
+Filter table to only genes on W chromosome, and tally the number of genes with "detected" expression (raw count > 0) only in females. 
+```R
+autoZW.unique.raw_counts.simple.Wonly <- as_tibble(autoZW.unique.raw_counts.simple,rownames = 'id') %>% 
+  filter(str_detect(id,'scaffold-W')) %>% 
+  filter(str_detect(id,'scaffold-W393371|trna',negate=T)) %>% 
+  mutate(total = rowSums(across(where(is.numeric)))) %>% 
+  mutate(total_female = rowSums(.[,c(2,3,6,7,10)])) %>% 
+  mutate(total_male = rowSums(.[,c(4,5,8,9,11)]))
+
+# Tally and plot number of W genes with detected expression in females
+autoZW.unique.raw_counts.simple.Wonly %>% 
+  group_by(total_female > 0) %>% 
+  tally() %>% 
+  ggplot(aes(x=`total_female > 0`,y=n)) +
+  geom_bar(stat='identity') +
+  geom_text(aes(label=n),nudge_y = -4,color='white') +
+  theme_linedraw()
+
+# 137 expressed, 82 not
+# 82 genes on the W with NO female sample expression counts 
+
+# Tally number of W genes with detected expression ONLY in females
+autoZW.unique.raw_counts.simple.Wonly %>% 
+  filter(total_male == 0 & total_female > 0) %>% 
+  group_by(total_female > 0) %>% 
+  tally()
+
+# 103 genes detected ONLY in female samples
+
+# Tally number of W chrom genes with detected expression on each stratum
+autoZW.unique.raw_counts.simple.Wonly %>% 
+  mutate(id = str_remove_all(id,'-mRNA-1')) %>% 
+  left_join(zw.geneInfo,by=c('id'='feature_abbrev')) %>% 
+  filter(!is.na(stratum)) %>% 
+  group_by(total_female > 0,stratum) %>% 
+  tally()
+
+# Older: 44 expressed, 19 not
+# Recent: 45 expressed, 18 not
+# Unknown: 48 expressed, 45 not
+```
+
+#### 3. Perform pairwise comparisons between male and female samples
+Use [DEseq2](https://bioconductor.org/packages/release/bioc/html/DESeq2.html) to perform pariwise comparisons between male and female samples. 
+```R
+# Filter out genes with no expression across all samples
+autoZW.unique.raw_counts.simple.filtered <- autoZW.unique.raw_counts.simple[rowSums( autoZW.unique.raw_counts.simple != 0 ) > 0,]
+
+# Define male/female groups for pairwise comparisons
+autoZW.unique.colData <- (DataFrame(condition=group <- factor(c('F','F','M','M','F','F','M','M','F','M'))))
+
+# Set up DESeq2 dataset object
+autoZW.unique.dds <- DESeqDataSetFromMatrix(autoZW.unique.raw_counts.simple.filtered,autoZW.unique.colData,formula(~condition))
+
+# Perform DESeq2 analysis
+autoZW.unique.dds <- DESeq(autoZW.unique.dds)
+```
+
+Extract pariwise comparisons results and perform [IHW](https://bioconductor.org/packages/release/bioc/html/IHW.html) p-value correction.
+```R
+# Generate data frame with pairwise comparison results
+autoZW.unique.deResFemVsMale <- as.data.frame(results(autoZW.unique.dds, contrast=c('condition','F','M')))
+
+# Calculate IHW p-value using baseMean as the covariate
+autoZW.unique.ihwRes <- ihw(pvalue ~ baseMean,  data = autoZW.unique.deResFemVsMale, alpha = 0.05)
+
+# Add IHW p-value to result table
+autoZW.unique.deResFemVsMale$IHW_pvalue <- autoZW.unique.ihwRes@df$adj_pvalue
+autoZW.unique.deResFemVsMale <- autoZW.unique.deResFemVsMale[order(autoZW.unique.deResFemVsMale$IHW_pvalue),]
+
+# Make table of genes with female biased expression (significantly diff expressed with IHW p-value < 0.05 and log2FC > 0)
+autoZW.unique.femUpreg <- as_tibble(autoZW.unique.deResFemVsMale,rownames = 'gene') %>% 
+  filter(IHW_pvalue < 0.05 & log2FoldChange > 0)
+
+nrow(autoZW.unique.femUpreg) # 33 significantly upregulated genes in female
+
+# Tally number of female-biased genes that are located on the W chrom
+autoZW.unique.femUpreg %>% 
+  mutate(onW = ifelse(str_detect(gene,'scaffold-W'),T,F)) %>% 
+  group_by(onW) %>% 
+  tally()
+
+# 31 out of 33 are on the W
+```
+
+Generate TPM normalized counts for plotting. 
+```R
+# Read in and clean raw count table
+raw.counts <- read_tsv('raw_counts/raw_counts_ref1/cvv_ref1_rawCounts_12.18.21.txt',comment = '#') %>% 
+  janitor::clean_names() %>% 
+  select(-2,-3,-4,-5)
+
+# Clean headers
+names(raw.counts) <- str_remove_all(names(raw.counts),'ref1_unique_star_mapped_|aligned_sorted_by_coord_out_bam|_aligned_sorted_by_coord_out_bam')
+
+# Get gene lengths from table
+gene.lengths <- raw.counts$length
+
+# Make matrix of raw counts
+raw.counts.matrix <- as.matrix(raw.counts[,-c(1,2)])
+row.names(raw.counts.matrix) <- raw.counts$geneid
+
+# Calculate Transcripts per million (TPM) counts
+count.over.length  <-  raw.counts.matrix / gene.lengths
+
+tpm.counts <- as.data.frame(t( t(count.over.length) * 1e6 / colSums(count.over.length) )) %>% 
+  rownames_to_column('id')  
+
+# Format a count table that includes male and female mean, whether a gene is on the W chromosome, and if so, which stratum its located within.
+tpm.counts.final <- as_tibble(tpm.counts) %>% 
+  mutate(femaleMean = rowMeans(.[,c(2,3,6,7,10)]),
+         maleMean = rowMeans(.[,c(4,5,8,9,11)])) %>% 
+  mutate(id = str_remove_all(id,'-mRNA-1')) %>% 
+  left_join(zw.geneInfo,by=c('id'='feature_abbrev')) %>% 
+  arrange(stratum,z_chromosome_position) %>% 
+  # select(-c(15,16)) %>% 
+  select(id,gene, everything())
+
+# Write TPM counts to file
+write_tsv(tpm.counts.final,'_autoZW.allGene.TPMCounts_03.02.22.tsv')
+```
+
+#### 4. Plot heatmap of ZW gametolog expression
+Read in TPM counts and filter to W chromosome genes only, add column indicating whether a gene is upregulated/biased in females.
+```R
+tpm.counts <- read_tsv('_autoZW.allGene.TPMCounts_03.02.22.tsv') %>% 
+  filter(str_detect(id,'scaffold-W')) %>% 
+  filter(!is.na(stratum)) %>% 
+  mutate(stratum = factor(stratum,levels=c('recent','older','unknown'))) %>% 
+  arrange(stratum,z_chromosome_position) %>% 
+  mutate(female_upreg = ifelse(id %in% female.upreg$gene,1,0))
+```
+
+Make a dataframe of TPM counts and an annotation table indicating which stratum each gene is located within for use in heatmap plotting. 
+```R
+exp.zw.maleFemaleHeat <- tpm.counts %>% select(id,ovaries,contains('kidney_f'),contains('liver_f'),femaleMean,maleMean,testes,contains('kidney_m'),contains('liver_m')) %>% 
+  as.data.frame() %>% 
+  column_to_rownames('id') 
+  
+exp.zw.femaleHeat.annot <- tpm.counts %>% select(id,stratum,female_upreg) %>%  as.data.frame() %>% column_to_rownames('id')
+
+# Filter out genes where the stratum is not known
+exp.zw.femaleHeat.annot.noUnknown <- exp.zw.femaleHeat.annot %>% 
+  filter(stratum != 'unknown')
+
+exp.zw.maleFemaleHeat.noUnknown <- exp.zw.maleFemaleHeat %>% 
+  filter(row.names(exp.zw.maleFemaleHeat) %in% 
+```
+
+Plot heatmap with [pheatmap](https://cran.r-project.org/web/packages/pheatmap/index.html).
+```R
+pheatmap(log10(exp.zw.maleFemaleHeat.noUnknown+1),
+         border_color = NA,
+         scale='none',
+         cellheight = 4,cellwidth = 10,
+         cluster_rows = F,cluster_cols = F,
+         color = scico(50,palette = 'lajolla',direction = -1),
+         show_rownames = F,
+         gaps_col = c(5,7),
+         annotation_row = exp.zw.femaleHeat.annot.noUnknown)
+```
+
+#### 5. Characterize genes with female-biased expression using GO term analyses.
+
+Load in foreground (genes on W chromsome) and background (genes not on W chromosome) gene lists.
+```R
+w.genes <- read_tsv('~/Downloads/Wchrom_GOtermAnalysis/WChromGenes.txt',col_names = 'symbol')
+bg.genes <- read_tsv('~/Downloads/Wchrom_GOtermAnalysis/bg_forWChromGO.txt',col_names = 'symbol')
+```
+
+Perform GO and pathway overrepresentation analysis of W genes versus non-W genes using [Webgestalt](https://cran.r-project.org/web/packages/WebGestaltR/index.html).
+```R
+
+go.res <- WebGestaltR(enrichMethod = 'ORA',
+            enrichDatabase = c('geneontology_Biological_Process_noRedundant','geneontology_Molecular_Function_noRedundant','geneontology_Cellular_Component_noRedundant'),
+            interestGene = w.genes$symbol,
+            interestGeneType = 'genesymbol',
+            referenceGene = bg.genes$symbol,
+            referenceGeneType = 'genesymbol',
+            sigMethod = 'top',
+            topThr = 20,
+            isOutput = F)
+
+go.res$analysis <- 'Gene Ontology'
+
+path.res <- WebGestaltR(enrichMethod = 'ORA',
+             enrichDatabase = c('pathway_KEGG','pathway_Panther','pathway_Reactome','pathway_Wikipathway'),
+             interestGene = w.genes$symbol,
+             interestGeneType = 'genesymbol',
+             referenceGene = bg.genes$symbol,
+             referenceGeneType = 'genesymbol',
+             sigMethod = 'top',
+             topThr = 20,
+             isOutput = F)
+
+path.res$analysis <- 'Pathway'
+
+```
+
+Combine and plot results.
+```R
+all.res <- go.res %>% 
+  bind_rows(path.res) %>% 
+  arrange(analysis,overlap) %>% 
+  mutate(description = factor(description,levels=unique(.$description))) %>% 
+  mutate(signif = ifelse(FDR < 0.05,T,F)) %>% 
+  mutate(database = str_split_fixed(database,'[_]',2)[,2] %>% str_replace_all('_',' ') %>% str_to_title())
+
+ggplot(all.res,aes(x=overlap,y=description,alpha=signif,fill=database)) +
+  geom_bar(stat='identity',orientation = 'y') + geom_point(data=subset(all.res,signif==TRUE),aes(x=overlap*1.1,y=description),pch='*',size=8,show.legend = F) +
+  scale_x_continuous(expand = c(0,0),limits = c(0,max(all.res$overlap)+2)) +
+  scale_alpha_manual(values = c('TRUE'=1,'FALSE'=0.35),guide='none')+
+  facet_wrap(~analysis,ncol = 1,scales='free_y') +
+  xlab('Number of Genes') +
+  ylab('Term') +
+  labs(alpha='FDR < 0.05',fill='Database') +
+  theme_classic() + theme(strip.background = element_rect(fill = 'grey30',colour = 'NA'),strip.text = element_text(color='white'))
+```
+
+
+## W-specific gene duplications
+
+#### X. GO term overrepresentation analysis of duplicated and translocated genes.
+The following analyses are performed in R. 
+
+Set up environment and read in data.
+```R
+library(tidyverse)
+library(WebGestaltR)
+
+w.dups.trans <- readxl::read_xlsx('W_duplication_translocation_genes.xlsx') %>% 
+  janitor::clean_names()
+
+w.dupsList <- w.dups.trans %>% 
+  select(w_specific_duplicated_genes) %>% 
+  filter(!is.na(w_specific_duplicated_genes))
+
+w.transList <- w.dups.trans %>% 
+  select(translocated_genes) %>% 
+  filter(!is.na(translocated_genes))
+
+bg.genes <- read_tsv('~/Downloads/Wchrom_GOtermAnalysis/bg_forWChromGO.txt',col_names = 'symbol')
+```
+
+Perform GO analysis for duplicated genes using [WebgestaltR](https://cran.r-project.org/web/packages/WebGestaltR/index.html).
+```R
+dups.go.res <- WebGestaltR(enrichMethod = 'ORA',
+                           enrichDatabase = c('geneontology_Biological_Process_noRedundant','geneontology_Molecular_Function_noRedundant','geneontology_Cellular_Component_noRedundant'),
+                           interestGene = w.dupsList$w_specific_duplicated_genes,
+                           interestGeneType = 'genesymbol',
+                           referenceGene = bg.genes$symbol,
+                           referenceGeneType = 'genesymbol',
+                           sigMethod = 'top',
+                           topThr = 20,
+                           isOutput = F)
+
+dups.go.res$analysis <- 'Gene Ontology'
+
+dups.path.res <- WebGestaltR(enrichMethod = 'ORA',
+                        enrichDatabase = c('pathway_KEGG','pathway_Panther','pathway_Reactome','pathway_Wikipathway'),
+                        interestGene = w.dupsList$w_specific_duplicated_genes,
+                        interestGeneType = 'genesymbol',
+                        referenceGene = bg.genes$symbol,
+                        referenceGeneType = 'genesymbol',
+                        sigMethod = 'top',
+                        topThr = 20,
+                        isOutput = F)
+
+dups.path.res$analysis <- 'Pathway'
+
+dups.all.res <- dups.go.res %>% 
+  bind_rows(dups.path.res) %>% 
+  arrange(overlap) %>% 
+  mutate(description = factor(description,levels=unique(.$description))) %>% 
+  mutate(signif = ifelse(FDR < 0.05,T,F)) %>% 
+  mutate(database = str_split_fixed(database,'[_]',2)[,2] %>% str_replace_all('_',' ') %>% str_to_title())
+
+ggplot(dups.all.res,aes(x=overlap,y=description,alpha=signif,fill=database)) +
+  geom_bar(stat='identity',orientation = 'y') +
+  geom_point(data=subset(dups.all.res,signif==TRUE),aes(x=overlap*1.1,y=description),pch='*',size=8,show.legend = F) +
+  scale_x_continuous(expand = c(0,0),limits = c(0,max(dups.all.res$overlap)+2)) +
+  scale_alpha_manual(values = c('TRUE'=1,'FALSE'=0.5),guide='none')+
+  facet_wrap(~analysis,ncol = 1,scales='free_y') +
+  xlab('Number of Genes') +
+  ylab('Term') +
+  labs(alpha='FDR < 0.05',fill='Database') +
+  theme_classic() + theme(strip.background = element_rect(fill = 'grey30',colour = 'NA'),strip.text = element_text(color='white'))
+```
+
+Perform GO analysis for translocated genes using [WebgestaltR](https://cran.r-project.org/web/packages/WebGestaltR/index.html).
+```R
+trans.go.res <- WebGestaltR(enrichMethod = 'ORA',
+                           enrichDatabase = c('geneontology_Biological_Process_noRedundant','geneontology_Molecular_Function_noRedundant','geneontology_Cellular_Component_noRedundant'),
+                           interestGene = w.transList$translocated_genes,
+                           interestGeneType = 'genesymbol',
+                           referenceGene = bg.genes$symbol,
+                           referenceGeneType = 'genesymbol',
+                           sigMethod = 'top',
+                           topThr = 20,
+                           isOutput = F)
+
+trans.go.res$analysis <- 'Gene Ontology'
+
+trans.path.res <- WebGestaltR(enrichMethod = 'ORA',
+                             enrichDatabase = c('pathway_KEGG','pathway_Panther','pathway_Reactome','pathway_Wikipathway'),
+                             interestGene = w.transList$translocated_genes,
+                             interestGeneType = 'genesymbol',
+                             referenceGene = bg.genes$symbol,
+                             referenceGeneType = 'genesymbol',
+                             sigMethod = 'top',
+                             topThr = 20,
+                             isOutput = F)
+
+trans.path.res$analysis <- 'Pathway'
+
+
+trans.all.res <- trans.go.res %>% 
+  bind_rows(trans.path.res) %>% 
+  arrange(overlap) %>% 
+  mutate(description = factor(description,levels=unique(.$description))) %>% 
+  mutate(signif = ifelse(FDR < 0.05,T,F)) %>% 
+  mutate(database = str_split_fixed(database,'[_]',2)[,2] %>% str_replace_all('_',' ') %>% str_to_title())
+
+ggplot(trans.all.res,aes(x=overlap,y=description,alpha=signif,fill=database)) +
+  geom_bar(stat='identity',orientation = 'y') +
+  geom_point(data=subset(trans.all.res,signif==TRUE),aes(x=overlap*1.1,y=description),pch='*',size=8,show.legend = F) +
+  scale_x_continuous(expand = c(0,0),limits = c(0,max(trans.all.res$overlap)+2)) +
+  scale_alpha_manual(values = c('TRUE'=1,'FALSE'=0.5),guide='none')+
+  facet_wrap(~analysis,ncol = 1,scales='free_y') +
+  xlab('Number of Genes') +
+  ylab('Term') +
+  labs(alpha='FDR < 0.05',fill='Database') +
+  theme_classic() + theme(strip.background = element_rect(fill = 'grey30',colour = 'NA'),strip.text = element_text(color='white'))
+```
 
 ## Gene decay on the W chromosome
 
