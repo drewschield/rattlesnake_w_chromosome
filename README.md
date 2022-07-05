@@ -23,7 +23,6 @@ Feel free to email me at drew.schield[at]colorado.edu with any questions.
 * [Refugium index analysis](#refugium-index-analysis)
 * [Toxicity index analysis](#toxicity-index-analysis)
 * [Gene expression analysis](#gene-expression-analysis)
-* [Gene decay on the W chromosome](#gene-decay-on-the-w-chromosome)
 * [W-specific gene duplications](#w-specific-gene-duplications)
 * [Sex-linked divergence between pitvipers](#sex-linked-divergence-between-pitvipers)
 * [ZW gametolog GC3 analysis](#zw-gametolog-GC3-analysis)
@@ -858,7 +857,10 @@ As with GC content, these analyses will be performed in 10 kb sliding windows. F
 touch ./repeats/CroVir_genome_L77pg_16Aug2017.final.reformat.mdg4.sort.gff; grep "Gypsy" ./genome_crotalus/CroVir_genome_L77pg_16Aug2017.final.reformat.repeat.masked.sort.gff >> ./repeats/CroVir_genome_L77pg_16Aug2017.final.reformat.mdg4.sort.gff
 ```
 
-
+Then run `window_mdg4_repeat_content.py` to calculate mdg4 content in 10 kb windows, using BED file for the male reference in `./resources/`.
+```
+python window_mdg4_repeat_content.py ./resources/CroVir_Dovetail_10Kb_window.bed ./repeats/CroVir_genome_L77pg_16Aug2017.final.reformat.mdg4.sort.gff ./repeats/CroVir_genome.repeat_content_mdg4.10kb.txt
+```
 
 
 
@@ -1310,8 +1312,6 @@ ggplot(trans.all.res,aes(x=overlap,y=description,alpha=signif,fill=database)) +
   labs(alpha='FDR < 0.05',fill='Database') +
   theme_classic() + theme(strip.background = element_rect(fill = 'grey30',colour = 'NA'),strip.text = element_text(color='white'))
 ```
-
-## Gene decay on the W chromosome
 
 ## W-specific gene duplications
 

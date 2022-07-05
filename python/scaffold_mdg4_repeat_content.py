@@ -8,7 +8,7 @@ import sys
 
 out = open(sys.argv[3], 'w')
 
-out.write('scaffold'+'\t'+'length'+'\t'+'repeat_length'+'\t'+'prop_repeat'+'\t'+'Gypsy_length'+'\t'+'prop_Gypsy'+'\n')
+out.write('scaffold'+'\t'+'length'+'\t'+'repeat_length'+'\t'+'prop_repeat'+'\t'+'mdg4_length'+'\t'+'prop_mdg4'+'\n')
 
 for line in open(sys.argv[1], 'r'):
 	chrom = line.split()[0]
