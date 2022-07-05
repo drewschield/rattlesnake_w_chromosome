@@ -832,6 +832,64 @@ Run `GC_CpG_content_autosomes_sex-chromosomes.R` to compare distributions of GC 
 
 ## Repeat content
 
+From the annotation of repeats it is clear that mdg4 elements contribute a substantial proportion of the total repetitive sequence on the W chromosome, which is over 80% repetitive. With this provisional result, we will examine variation in overall repeat content across the genome, along with a focus on mdg4 element abundance.
+
+### Set up environment
+
+```
+mkdir repeats
+```
+
+### Quantify overall repeat and mdg4 content on W scaffolds
+
+First, run `fasta_seq_length.py` on the W chromosome assembly to output a scaffold list with lengths.
+```
+python fasta_seq_length.py ./resources/annotation/Cviridis_CV0650_candidate_W.rescaffold.rename.fasta > ./resources/Cviridis_CV0650_candidate_W.rescaffold.rename.lengths.txt
+```
+
+Then, run `scaffold_mdg4_repeat_content.py` to quantify repeat content per W scaffold.
+
+```
+python scaffold_mdg4_repeat_content.py ./resources/Cviridis_CV0650_candidate_W.rescaffold.rename.lengths.txt ./resources/annotation/Cviridis_CV0650_candidate_W.rescaffold.rename.full_mask.reformat.gff3 ./repeats/Cviridis_CV0650_candidate_W.repeat_content_mdg4.txt
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## mdg4 retroelement GC-richness
 
 ## Annotation of full-length LTR elements
