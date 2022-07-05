@@ -790,48 +790,21 @@ python window_mdg4_repeat_content.py ./resources/CroVir_Dovetail_10Kb_window.bed
 ```
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## mdg4 retroelement GC-richness
+
+UNDER CONSTRUCTION
 
 ## Annotation of full-length LTR elements
 
+UNDER CONSTRUCTION
+
 ## Refugium index analysis
 
+UNDER CONSTRUCTION
+
 ## Toxicity index analysis
+
+UNDER CONSTRUCTION
 
 ## Gene expression analysis
 
@@ -1242,11 +1215,19 @@ ggplot(trans.all.res,aes(x=overlap,y=description,alpha=signif,fill=database)) +
 
 ## W-specific gene duplications
 
+UNDER CONSTRUCTION
+
 ## Sex-linked divergence between pitvipers
+
+UNDER CONSTRUCTION
 
 ## ZW gametolog GC3 analysis
 
+UNDER CONSTRUCTION
+
 ## Appendix: Indian cobra analysis
+
+UNDER CONSTRUCTION
 
 
 
