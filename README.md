@@ -68,7 +68,6 @@ We generated a 10x Genomics Chromium library for a female prairie rattlesnake fr
 Assess read quality using FastQC and summarize using MultiQC.
 
 #### Set up environment
-
 ```
 mkdir fastq
 mkdir fastqc
@@ -78,14 +77,12 @@ mkdir genome_crotalus_female
 Raw linked-read data for the female prairie rattlesnake should be placed in the `fastq` directory.
 
 #### Run FastQC analysis
-
 ```
 cd fastqc
 fastqc --threads 16 -o . ../fastq/PitViper_042019_S2_L004_R1_001.fastq.gz ../fastq/PitViper_042019_S2_L004_R2_001.fastq.gz
 ```
 
 #### Summarize output with MultiQC
-
 ```
 multiqc .
 ```
@@ -103,19 +100,16 @@ Use Supernova to assembly linked-read data into pseudohaplotype scaffolds.
 The assembler is optimized to work with 56-fold coverage, requiring a number of input reads based on genome size and this coverage threshold. Using an estimated 1.5 Gb genome size for prairie rattlesnake, read lengths (150 bp) and 56-fold coverage, the number of input reads is as follows: <br />
 
 1,500,000,000 x 56 / 150 = __560,000,000 input reads__.
-
 ```
 supernova run --maxreads 560000000 --id=CV0650_female_Cviridis --fastqs=./fastq/
 ```
 
 Generate pseudohaplotype fasta assembly with a minimum scaffold length of 10 kb.
-
 ```
 supernova mkoutput --style=pseudohap2 --asmdir=./CV0650_female_Cviridis/outs/assembly/ --outprefix=CV0650_10xAssembly_Round3 --minsize=10000 --headers=short 
 ```
 
 Move assembly to female genome directory and clean up intermediates.
-
 ```
 mv ./CV0650_female_Cviridis/outs/assembly/CV0650_10xAssembly_Round3_pseudohap.*.fasta ./genome_crotalus_female
 rm -r ./CV0650_female_Cviridis/
@@ -126,14 +120,12 @@ rm -r ./CV0650_female_Cviridis/
 Use homology with the male prairie rattlesnake reference genome and relative female/male read depths on female scaffolds to identify candidate W chromosome scaffolds.
 
 ### Set up environment
-
 ```
 mkdir W_chromosome_identification
 mkdir genome_crotalus
 ```
 
 Retrieve the [assembly](https://figshare.com/ndownloader/files/16522091), [gene annotation](https://figshare.com/ndownloader/files/16522322), and [repeat annotation](https://figshare.com/ndownloader/files/16522487) for the male prairie rattlesnake reference. The assembly is also available from [NCBI]().
-
 ```
 wget https://figshare.com/ndownloader/files/16522091 ./genome_crotalus/CroVir_genome_L77pg_16Aug2017.final_rename.fasta.gz
 wget https://figshare.com/ndownloader/files/16522322 ./genome_crotalus/CroVir_rnd1.all.maker.final.homologIDs.gff.gz 
@@ -145,7 +137,6 @@ wget https://figshare.com/ndownloader/files/16522487 ./genome_crotalus/CroVir_ge
 W-linked sequences should not have stringent high-similarity hits to autosomes. Instead, these should either have hits to the Z chromosome or not hit anything in the male reference.
 
 Use mashmap to compare the female and male assemblies.
-
 ```
 mashmap -r ./genome_crotalus/CroVir_genome_L77pg_16Aug2017.final_rename.fasta -q ./genome_crotalus/female/CV0650_10xAssembly_Round3_pseudohap.1.fasta -t 6 --perc_identity 95 -f one-to-one -o ./W_chromosome_identification/10xPsdo1_toCvv_pi95_1to1.mashmap.out
 mashmap -r ./genome_crotalus/CroVir_genome_L77pg_16Aug2017.final_rename.fasta -q ./genome_crotalus/female/CV0650_10xAssembly_Round3_pseudohap.2.fasta -t 6 --perc_identity 95 -f one-to-one -o ./W_chromosome_identification/10xPsdo2_toCvv_pi95_1to1.mashmap.out
@@ -171,7 +162,6 @@ Thresholds to compare are:
 * female mapping proportion > Q3 + 1.5*IQR
 
 Retrieve chicken reference from NCBI and read data from SRA (accessions SRR958465 [male] and SRR958466 [female]).
-
 ```
 mkdir genome_gallus
 cd genome_gallus
@@ -188,7 +178,6 @@ cd ..
 ```
 
 Index reference, map reads, and index outputs.
-
 ```
 bwa index ./genome_gallus/GCA_000002315.5_GRCg6a_genomic.fna
 mkdir ./W_chromosome_identification/comparative_W_coverage/gallus
@@ -206,14 +195,12 @@ The chicken scaffolds are highly contiguous. In order to make a reasonable compa
 The mean female rattlesnake scaffold length is __10013.8 bp__, so setting chicken analysis to 10 kb windows seems reasonable.
 
 Make a bed file of chicken scaffolds in 10 kb windows after extracting 'genome' file using the script `fastq_seq_length.py`.
-
 ```
 python fasta_seq_length.py ./genome_gallus/GCF_000002315.6_GRCg6a_genomic.fna > ./genome_gallus/GCF_000002315.6_GRCg6a_genomic.scaffold_lengths.txt
 bedtools makewindows -g ./genome_gallus/GCF_000002315.6_GRCg6a_genomic.scaffold_lengths.txt -w 10000 > ./genome_gallus/GCF_000002315.6_GRCg6a_genomic.10kb.window.bed
 ```
 
 Calculate mean depth per 10 kb window using mosdepth.
-
 ```
 mosdepth -t 4 --fast-mode -n -b ./genome_gallus/GCF_000002315.6_GRCg6a_genomic.10kb.window.bed ./W_chromosome_identification/comparative_W_coverage/gallus/gallus_female_GRCg6a.10kb ./W_chromosome_identification/comparative_W_coverage/gallus/bam/gallus_female_GRCg6a.bam
 mosdepth -t 4 --fast-mode -n -b ./genome_gallus/GCF_000002315.6_GRCg6a_genomic.10kb.window.bed ./W_chromosome_identification/comparative_W_coverage/gallus/gallus_male_GRCg6a.10kb ./W_chromosome_identification/comparative_W_coverage/gallus/bam/gallus_male_GRCg6a.bam
@@ -228,7 +215,6 @@ These analyses demonstrate that the __log2FM >= 1__ threshold method has high po
 #### 2. Calculate relative female:male coverage in prairie rattlesnake
 
 Set up environment.
-
 ```
 mkdir W_chromosome_identification/coverage_exp_crotalus
 mkdir W_chromosome_identification/coverage_exp_crotalus/fastq
@@ -236,7 +222,6 @@ mkdir W_chromosome_identification/coverage_exp_crotalus/bam
 ```
 
 Retrieve read data for male and female prairie rattlesnakes.
-
 ```
 ./W_chromosome_identification/coverage_exp_crotalus/fastq/CV0007_S82_L004_R1_001.fastq.gz
 ./W_chromosome_identification/coverage_exp_crotalus/fastq/CV0007_S82_L004_R1_001.fastq.gz
@@ -245,14 +230,12 @@ Retrieve read data for male and female prairie rattlesnakes.
 ```
 
 Index pseudohaplotype reference fasta files.
-
 ```
 bwa index ./genome_crotalus_female/CV0650_10xAssembly_Round3_pseudohap.1.fasta
 bwa index ./genome_crotalus_female/CV0650_10xAssembly_Round3_pseudohap.2.fasta
 ```
 
 Map to female reference.
-
 ```
 bwa mem -t 16 ./genome_crotalus_female/CV0650_10xAssembly_Round3_pseudohap.1.fasta ./W_chromosome_identification/coverage_exp_crotalus/fastq/CV0007_S82_L004_R1_001.fastq.gz ./W_chromosome_identification/coverage_exp_crotalus/fastq/CV0007_S82_L004_R2_001.fastq.gz | samtools sort -O bam -T bimb -o ./W_chromosome_identification/coverage_exp_crotalus/bam/CV0007_CV0650_pseudohap1.bam -
 bwa mem -t 16 ./genome_crotalus_female/CV0650_10xAssembly_Round3_pseudohap.2.fasta ./W_chromosome_identification/coverage_exp_crotalus/fastq/CV0007_S82_L004_R1_001.fastq.gz ./W_chromosome_identification/coverage_exp_crotalus/fastq/CV0007_S82_L004_R2_001.fastq.gz | samtools sort -O bam -T chup -o ./W_chromosome_identification/coverage_exp_crotalus/bam/CV0007_CV0650_pseudohap2.bam -
@@ -261,7 +244,6 @@ bwa mem -t 16 ./genome_crotalus_female/CV0650_10xAssembly_Round3_pseudohap.2.fas
 ```
 
 Index output bam files.
-
 ```
 samtools index ./W_chromosome_identification/coverage_exp_crotalus/bam/CV0011_CV0650_pseudohap1.bam
 samtools index ./W_chromosome_identification/coverage_exp_crotalus/bam/CV0011_CV0650_pseudohap2.bam
@@ -270,7 +252,6 @@ samtools index ./W_chromosome_identification/coverage_exp_crotalus/bam/CV0007_CV
 ```
 
 Calculate mean depth per scaffold using mosdepth.
-
 ```
 mosdepth -t 4 --fast-mode -n ./W_chromosome_identification/coverage_exp_crotalus/CV0011_CV0650_pseudohap1 ./W_chromosome_identification/coverage_exp_crotalus/bam/CV0011_CV0650_pseudohap1.bam
 mosdepth -t 4 --fast-mode -n ./W_chromosome_identification/coverage_exp_crotalus/CV0011_CV0650_pseudohap2 ./W_chromosome_identification/coverage_exp_crotalus/bam/CV0011_CV0650_pseudohap2.bam
@@ -285,7 +266,6 @@ Run `W_identification_crotalus.R` to compare normalized female:male read depths,
 #### 3. Filter and parse candidate W chromosome scaffolds
 
 Filter scaffolds with no hits to autosomes.
-
 ```
 cd ./W_chromosome_identification/
 touch pseudohap1_no-auto_log2FM_thresh_scaffolds.txt; for i in `cat CvvPseudo1_NoAutoHits_scaffIDs_02.27.20.txt`; do awk 'BEGIN{OFS='\t'}{if ($1=='$i') print $0}' pseudohap1_log2FM_thresh_scaffolds.txt >> pseudohap1_no-auto_log2FM_thresh_scaffolds.txt; done
@@ -296,7 +276,6 @@ cd ..
 The final lists of candidate W scaffolds are in `CANDIDATE_W_pseudohap1_scaffold.list.txt` and `CANDIDATE_W_pseudohap1_scaffold.list.txt` in the `resources` directory.
 
 Extract sequence for candidate W scaffolds using `scaffold_list_extractor.py`.
-
 ```
 mkdir ./W_chromosome_identification/candidate_W/
 python scaffold_list_extractor.py ./genome_crotalus_female/CV0650_10xAssembly_Round3_pseudohap.1.fasta ./W_chromosome_identification/CANDIDATE_W_pseudohap1_scaffold.list.txt ./W_chromosome_identification/candidate_W/pseudohaplotype1.candidate_W.fasta
@@ -350,7 +329,6 @@ We can investigate divergence between ZW gametologs and the presence of evolutio
 First, use divergence between rattlesnake and anole lizard 1:1 orthologs and their known divergence time to calculate a mutation rate estimate to scale divergence estimates between ZW gametologs.
 
 #### Set up environment
-
 ```
 mkdir divergence_crotalus_anolis
 mkdir divergence_crotalus_anolis/ortholog_sequences
@@ -360,7 +338,6 @@ mkdir divergence_crotalus_anolis/codeml
 ```
 
 #### Retrieve anole data
-
 ```
 mkdir genome_anolis
 cd genome_anolis
@@ -370,7 +347,6 @@ cd ..
 ```
 
 #### Extract CDS sequences
-
 ```
 gffread -x ./divergence_crotalus_anolis/anolis.cds.fasta -g ./genome_anolis/GCF_000090745.1_AnoCar2.0_genomic.fna ./genome_anolis/GCF_000090745.1_AnoCar2.0_genomic.gff
 grep -v '#' ./genome_crotalus/CroVir_rnd1.all.maker.final.homologIDs.gff | gffread -x ./divergence_crotalus_anolis/crotalus.cds.fasta -g ./genome_crotalus/CroVir_genome_L77pg_16Aug2017.final_rename.fasta -
@@ -381,21 +357,18 @@ The initial grep command for *Crotalus* removes the commented entries in the GFF
 #### Identify 1:1 orthologs using tBLASTx
 
 Make BLAST databases for reciprocal searches.
-
 ```
 makeblastdb -dbtype nucl -in ./divergence_crotalus_anolis/anolis.cds.fasta
 makeblastdb -dbtype nucl -in ./divergence_crotalus_anolis/crotalus.cds.fasta
 ```
 
 Perform reciprocal tBLASTx searches.
-
 ```
 tblastx -num_threads 8 -max_target_seqs 5 -max_hsps 1 -evalue 0.00001 -outfmt "6 qacc sacc evalue bitscore qstart qend sstart send" -db ./divergence_crotalus_anolis/crotalus.cds.fasta -query ./divergence_crotalus_anolis/anolis.cds.fasta -out ./divergence_crotalus_anolis/tblastx_anolis2crotalus.cds.txt
 tblastx -num_threads 4 -max_target_seqs 5 -max_hsps 1 -evalue 0.00001 -outfmt "6 qacc sacc evalue bitscore qstart qend sstart send" -db ./divergence_crotalus_anolis/anolis.cds.fasta -query ./divergence_crotalus_anolis/crotalus.cds.fasta -out ./divergence_crotalus_anolis/tblastx_crotalus2anolis.cds.txt
 ```
 
 Extract reciprocal best BLAST hits using `RBH_comma.py` script, adapted from the script written by [Daren Card](https://github.com/darencard). 
-
 ```
 python RBH_comma.py ./divergence_crotalus_anolis/tblastx_anolis2crotalus.cds.txt ./divergence_crotalus_anolis/tblastx_crotalus2anolis.cds.txt ./divergence_crotalus_anolis/orthologs_crotalus_anolis.one2one.txt
 ```
@@ -403,7 +376,6 @@ python RBH_comma.py ./divergence_crotalus_anolis/tblastx_anolis2crotalus.cds.txt
 This identified 12,367 ortholog pairs.
 
 Remove pairs that are Z-linked in rattlesnake.
-
 ```
 grep -v 'scaffold-Z' ./divergence_crotalus_anolis/orthologs_crotalus_anolis.one2one.txt > ./divergence_crotalus_anolis/orthologs_crotalus_anolis.one2one.autosome.txt
 ```
@@ -411,7 +383,6 @@ grep -v 'scaffold-Z' ./divergence_crotalus_anolis/orthologs_crotalus_anolis.one2
 This keeps __11,277 autosomal ortholog pairs__.
 
 Extract fasta sequences for orthologs using `makeOrthoFasta.py`.
-
 ```
 cd divergence_crotalus_anolis
 python makeOrthoFasta.py orthologs_crotalus_anolis.one2one.autosome.txt crotalus.cds.fasta anolis.cds.fasta
@@ -420,7 +391,6 @@ python makeOrthoFasta.py orthologs_crotalus_anolis.one2one.autosome.txt crotalus
 This writes sequence pairs to `./divergence_crotalus_anolis/ortholog_sequences/`.
 
 Run `translate_fasta.py` to translate nucleotide fastas to amino acid sequences.
-
 ```
 for fasta in ./ortholog_sequences/*.fna; do python ./python/translate_fasta.py $fasta; done
 ```
@@ -428,25 +398,21 @@ for fasta in ./ortholog_sequences/*.fna; do python ./python/translate_fasta.py $
 #### Align 1:1 orthologs using Clustal Omega
 
 Run `alignClustal.sh` to align amino acid sequences.
-
 ```
 sh alignClustal.sh ./ortholog_sequences ./ortholog_alignments
 ```
 
 Generate codon-aware nucleotide alignments using PAL2NAL with `convertPAL2NAL.sh` script.
-
 ```
 sh convertPAL2NAL.sh ./ortholog_alignments ./ortholog_sequences
 ```
 
 Write a control file for PAML for each alignment using `ctlWrite.sh`.
-
 ```
 sh ctlWrite.sh ./ortholog_alignments ./ctl ./codeml
 ```
 
 PAML barfs on the long-format detailed names. These steps will ensure each of the files has simple 'crotalus' and 'anolis' sequence headers. The second sed command takes care of the anole entries because they all have '-' in them and the rattlesnake lines have already been overwritten.
-
 ```
 for fasta in ./ortholog_sequences/*.fna; do sed -i '/-scaffold-/c\>crotalus' $fasta; sed -i '/-/c\>anolis' $fasta; done
 for fasta in ./ortholog_sequences/*.faa; do sed -i '/-scaffold-/c\>crotalus' $fasta; sed -i '/-/c\>anolis' $fasta; done
@@ -454,14 +420,12 @@ for fasta in ./ortholog_alignments/*.pal2nal; do sed -i '/-scaffold-/c\crotalus'
 ```
 
 The aligned amino acids need a bit more attention, since gaps are denoted as '-':
-
 ```
 for fasta in ./ortholog_alignments/*.faa; do sed -i '/-scaffold-/c\>crotalus' $fasta; sed -i '/_/c\>anolis' $fasta; done
 for fasta in ./ortholog_alignments/*.faa; do sed -i '/id-LOC/c\>anolis' $fasta; done
 ```
 
 Check that headers have all been reformatted:
-
 ```
 for i in ./ortholog_sequences/*.fna; do grep '>anolis' $i; done | wc -l
 for i in ./ortholog_sequences/*.faa; do grep '>anolis' $i; done | wc -l
@@ -474,13 +438,11 @@ All should equal 11,277.
 #### Calculate divergence statistics using CODEML
 
 Run CODEML on each alignment, calling the respective control file.
-
 ```
 for control in ./ctl/*.ctl; do codeml $control; done
 ```
 
 Run `parseCodeml.sh` to write a table of divergence statistics for all of the alignments. This calls the `parse_codeml_output.py` script available [here](https://github.com/faylward/dnds), modified to print 'NA's for filtered results.
-
 ```
 sh parseCodeml.sh > crotalus_anolis_ortholog.autosome.dnds.txt
 ```
@@ -496,7 +458,6 @@ An alternative generalized squamate mutation rate from four-fold degenerate site
 Identify 1:1 gametologs on the Z and W chromosomes to estimate divergence.
 
 #### Set up environment
-
 ```
 mkdir divergence
 mkdir divergence/crotalus/
@@ -504,34 +465,29 @@ cd ./divergence/crotalus/
 ```
 
 #### Extract Z and W chromosome CDS sequences
-
 ```
 grep 'scaffold-Z' ../../genome_crotalus/CroVir_rnd1.all.maker.final.homologIDs.gff | gffread -x chrZ.cds.fasta -g ../../genome_crotalus/CroVir_genome_L77pg_16Aug2017.final_rename.fasta -
 gffread -x chrW.cds.fasta -g ../../resources/annotation/Cviridis_CV0650_candidate_W.rescaffold.rename.fasta ../../resources/annotation/croVir_Wscaff_rnd2_alt.all.maker.noseq.gff3
 ```
 
 #### Make BLAST databases for CDS sequences
-
 ```
 makeblastdb -dbtype nucl -in chrZ.cds.fasta
 makeblastdb -dbtype nucl -in chrW.cds.fasta
 ```
 
 #### Perform reciprocal tBLASTx searches
-
 ```
 tblastx -num_threads 8 -max_hsps 1 -evalue 0.00001 -outfmt "6 qacc sacc evalue bitscore qstart qend sstart send" -db chrW.cds.fasta -query chrZ.cds.fasta -out tblastx_Z2W.cds.txt
 tblastx -num_threads 8 -max_hsps 1 -evalue 0.00001 -outfmt "6 qacc sacc evalue bitscore qstart qend sstart send" -db chrZ.cds.fasta -query chrW.cds.fasta -out tblastx_W2Z.cds.txt
 ```
 
 #### Process results using `RBH_comma.py` script
-
 ```
 python RBH_comma.py tblastx_Z2W.cds.txt tblastx_W2Z.cds.txt gametologs.cds.one2one.txt
 ```
 
 Format a tab-delimited version to paste together with gene coordinate and annotation details.
-
 ```
 sed 's/,/\t/g' gametologs.cds.one2one.txt > gametologs.cds.one2one.fix.txt
 ```
@@ -541,13 +497,11 @@ sed 's/,/\t/g' gametologs.cds.one2one.txt > gametologs.cds.one2one.fix.txt
 Coordinates are needed for ZW gametolog pairs to interpret divergence estimates in the context of the Z chromosome.
 
 Extract gene IDs from the Z chromosome CDS.
-
 ```
 grep '>' chrZ.cds.fasta | cut -d'>' -f2 > cds.Z_geneID.list
 ```
 
 Query GFF for coordinates of each gene.
-
 ```
 touch cds.Z_geneID_coordinates.txt; for mrna in `cat cds.Z_geneID.list`; do grep -w "$mrna" ../../genome_crotalus/CroVir_rnd1.all.maker.final.homologIDs.gff | awk 'BEGIN{OFS="\t"} $3 == "mRNA" {print $1,$4,$5,$9}' - >> cds.Z_geneID_coordinates.txt; done
 ```
@@ -555,13 +509,11 @@ touch cds.Z_geneID_coordinates.txt; for mrna in `cat cds.Z_geneID.list`; do grep
 Note that the fourth column also contain the transcript IDs.
 
 Extract Z chromosome coordinates for ZW gametolog pairs.
-
 ```
 touch ZW_homology.Z_geneID_coordinates.txt; cat gametologs.cds.one2one.txt | while read line; do chrz=`echo $line | cut -d, -f2`; grep -w $chrz cds.Z_geneID_coordinates.txt >> ZW_homology.Z_geneID_coordinates.txt; done
 ```
 
 Paste coordinates for ZW gametologs to annotation details.
-
 ```
 pr -mts$'\t' <(cut -f1,2,3 ZW_homology.Z_geneID_coordinates.txt) gametologs.cds.one2one.fix.txt <(cut -f4 ZW_homology.Z_geneID_coordinates.txt) > gametologs.cds.one2one.Z_geneID_coordinates.txt
 ```
@@ -573,7 +525,6 @@ chromosome, start position, end position, W transcript, Z transcript, annotation
 ### 3. Alignment of ZW gametologs
 
 #### Set up environment
-
 ```
 cd ./divergence/crotalus/
 mkdir ZW_gametolog_seq
@@ -583,7 +534,6 @@ mkdir ZW_gametolog_aln
 #### Extract ZW gametolog sequence files
 
 Run `make_ZW_gametolog_fasta.py` to write fasta file per ZW gametolog pair.
-
 ```
 python make_ZW_gametolog_fasta.py gametologs.cds.one2one.Z_geneID_coordinates.txt chrZ.cds.fasta chrW.cds.fasta
 ```
@@ -593,7 +543,6 @@ This writes the output files to the `ZW_gametolog_seq` directory.
 #### Translate sequences to amino acid
 
 Run `translate_gametolog_fasta.py` on input nucleotide fasta files.
-
 ```
 for fasta in ZW_gametolog_seq/*.fna; do python translate_gametolog_fasta.py $fasta; done
 ```
@@ -601,13 +550,11 @@ for fasta in ZW_gametolog_seq/*.fna; do python translate_gametolog_fasta.py $fas
 #### Align ZW gametologs
 
 First, run `alignClustal_gametologs.sh` to align amino acid sequences using Clustal Omega.
-
 ```
 sh alignClustal_gametologs.sh ZW_gametolog_seq ZW_gametolog_aln
 ```
 
 Then run `convertPAL2NAL_gametologs.sh` to convert to codon-based nucleotide alignments.
-
 ```
 sh convertPAL2NAL_gametologs.sh ZW_gametolog_aln ZW_gametolog_seq
 ```
@@ -615,7 +562,6 @@ sh convertPAL2NAL_gametologs.sh ZW_gametolog_aln ZW_gametolog_seq
 ### 4. Analysis of ZW gametologs in CODEML
 
 #### Set up environment
-
 ```
 mkdir ctl
 mkdir codeml
@@ -624,7 +570,6 @@ mkdir codeml
 #### Generate CODEML control files
 
 Run `ctlWrite_gametologs.sh` to generate control files for analysis of each alignment, specifying the directories with alignments, control files, and where the results of codeml will be written.
-
 ```
 sh ctlWrite_gametologs.sh ZW_gametolog_aln ctl codeml
 ```
@@ -632,13 +577,11 @@ sh ctlWrite_gametologs.sh ZW_gametolog_aln ctl codeml
 #### Perform CODEML analyses
 
 Run CODEML to calculate divergence statistics per alignment.
-
 ```
 for control in ./ctl/*.ctl; do codeml $control; done
 ```
 
 Parse CODEML results using `parseCodeml_gametologs.sh`.
-
 ```
 sh parseCodeml_gametologs.sh > crotalusZW_gametolog.dnds.txt
 ```
@@ -652,7 +595,6 @@ Comparison of female and male read depths across the Z chromosome can reveal dif
 These analyses will use read data for prairie rattlesnake described [above](#identification-of-w-chromosome-scaffolds), five-pace viper (_Deinagkistrodon acutus_) from [Yin et al. (2016)](https://www.nature.com/articles/ncomms13107), and pygmy rattlesnake (_Sistrurus miliarius_) and western terrestiral garter snake (_Thamnophis elegans_) from [Vicoso et al. (2013)](https://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.1001643). 
 
 #### Set up environment
-
 ```
 mkdir coverage
 mkdir coverage/fastq/
@@ -662,7 +604,6 @@ cd coverage
 ```
 
 #### Download read data for other species from NCBI SRA
-
 ```
 fastq-dump --split-files --gzip ./fastq/SRR941260
 fastq-dump --split-files --gzip ./fastq/SRR941259
@@ -673,7 +614,6 @@ fastq-dump --split-files --gzip ./fastq/SRR941261
 ```
 
 Rename fastq files with species/sex identifiers.
-
 ```
 mv ./fastq/SRR941260_1.fastq.gz ./fastq/thamnophis_mDNA_1.fastq.gz
 mv ./fastq/SRR941260_2.fastq.gz ./fastq/thamnophis_mDNA_2.fastq.gz
@@ -690,7 +630,6 @@ mv ./fastq/SRR941261_2.fastq.gz ./fastq/sistrurus_fDNA_2.fastq.gz
 ```
 
 #### Map reads to the rattlesnake genome
-
 ```
 bwa mem -t 4 ../genome_crotalus/CroVir_genome_L77pg_16Aug2017.fasta ./fastq/thamnophis_mDNA_1.fastq.gz ./fastq/thamnophis_mDNA_2.fastq.gz | samtools sort -O bam -T male -o ./bam/thamnophis_mDNA.bam -
 bwa mem -t 4 ../genome_crotalus/CroVir_genome_L77pg_16Aug2017.fasta ./fastq/thamnophis_fDNA_1.fastq.gz ./fastq/thamnophis_fDNA_2.fastq.gz | samtools sort -O bam -T female -o ./bam/thamnophis_fDNA.bam -
@@ -705,13 +644,11 @@ bwa mem -t 4 ../genome_crotalus/CroVir_genome_L77pg_16Aug2017.fasta ../W_chromos
 #### Filter mapping quality
 
 Filter using samtools.
-
 ```
 for map in ./bam/*.bam; do name=`echo $map | cut -d'/' -f3 | cut -d'.' -f1`; samtools view -q 30 -b $map > ./bam/$name.q30.bam; done
 ```
 
 Index results.
-
 ```
 for i in ./bam/*.q30.bam; do samtools index $i; done
 ```
@@ -719,7 +656,6 @@ for i in ./bam/*.q30.bam; do samtools index $i; done
 #### Run mosdepth analysis
 
 Perform analyses in 10 kb sliding windows using coordinates in `resources/CroVir_Dovetail_10kb_window.ChromAssigned.bed`.
-
 ```
 mosdepth -t 4 --fast-mode -n -b CroVir_Dovetail_10kb_window.ChromAssigned.bed -f ../genome_crotalus/CroVir_genome_L77pg_16Aug2017.fasta ./mosdepth_results/thamnophis_mDNA ./bam/thamnophis_mDNA.bam
 mosdepth -t 4 --fast-mode -n -b CroVir_Dovetail_10kb_window.ChromAssigned.bed -f ../genome_crotalus/CroVir_genome_L77pg_16Aug2017.fasta ./mosdepth_results/thamnophis_fDNA ./bam/thamnophis_fDNA.bam
@@ -740,7 +676,6 @@ With identified W-linked scaffolds, comparisons of GC and CpG content can be mad
 ### 1. GC and CpG content in prairie rattlesnake
 
 #### Set up environment
-
 ```
 mkdir gc
 cd gc
@@ -749,13 +684,11 @@ cd gc
 #### Calculate GC and CpG content per W chromosome scaffold
 
 Run `scaffold_gc.py` to quantify GC content for each scaffold.
-
 ```
 $python scaffold_gc.py ../resources/annotation/Cviridis_CV0650_candidate_W.rescaffold.rename.fasta Cviridis_CV0650_candidate_W.rescaffold.rename.GC.txt
 ```
 
 Run `scaffold_cpg.py` to quantify CpG content for each W chromosome scaffold.
-
 ```
 python scaffold_cpg.py ../resources/annotation/Cviridis_CV0650_candidate_W.rescaffold.rename.fasta Cviridis_CV0650_candidate_W.rescaffold.rename.CpG.txt
 ```
@@ -763,13 +696,11 @@ python scaffold_cpg.py ../resources/annotation/Cviridis_CV0650_candidate_W.resca
 #### Calculate GC and CpG content in sliding windows on autosomes and Z chromosome
 
 Run `slidingwindow_gc.py` to quantify GC content in 10 kb windows.
-
 ```
 python slidingwindow_gc.py ../genome_crotalus/CroVir_genome_L77pg_16Aug2017.fasta 10000 10000 CroVir_genome.GC.10kb.txt
 ```
 
 Run `slidingwindow_cpg.py` to quantify CpG content in 10 kb windows.
-
 ```
 python slidingwindow_cpg.py ../genome_crotalus/CroVir_genome_L77pg_16Aug2017.fasta 10000 10000 CroVir_genome.CpG.10kb.txt
 ```
@@ -781,7 +712,6 @@ Compare distributions of GC and CpG content on autosomes and the sex chromosomes
 Here, compare autosomal and sex-linked GC content between prairie rattlesnake, birds, and mammals.
 
 #### Set up environment
-
 ```
 cd ./
 mkdir genome_taenopygia
@@ -790,7 +720,6 @@ mkdir genome_mus
 ```
 
 #### Retrieve genome data
-
 ```
 cd ./genome_taeniopygia
 wget https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/008/822/105/GCF_008822105.2_bTaeGut2.pat.W.v2/GCF_008822105.2_bTaeGut2.pat.W.v2_genomic.fna.gz
@@ -808,7 +737,6 @@ gunzip GCF_000001635.27_GRCm39_genomic.fna.gz
 The chicken genome is already in the `./genome_gallus/` directory.
 
 #### Calculate GC content for each genome in 10 kb windows
-
 ```
 python slidingwindow_gc_content.py ./genome_gallus/GCF_000002315.6_GRCg6a_genomic.fna 10000 10000 ./gc/genome_gallus.GC.10kb.txt
 python slidingwindow_gc_content.py ./genome_taeniopygia/GCF_008822105.2_bTaeGut2.pat.W.v2_genomic.fna 10000 10000 ./gc/genome_taeniopygia.GC.10kb.txt
@@ -817,7 +745,6 @@ python slidingwindow_gc_content.py ./genome_mus/GCF_000001635.27_GRCm39_genomic.
 ```
 
 #### Calculate CpG content for each genome in 10 kb windows
-
 ```
 python slidingwindow_cpg.py ./genome_gallus/GCF_000002315.6_GRCg6a_genomic.fna 10000 10000 ./gc/genome_gallus.CpG.10kb.txt
 python slidingwindow_cpg.py ./genome_taeniopygia/GCF_008822105.2_bTaeGut2.pat.W.v2_genomic.fna 10000 10000 ./gc/genome_taeniopygia.CpG.10kb.txt
