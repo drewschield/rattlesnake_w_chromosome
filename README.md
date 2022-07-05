@@ -835,7 +835,6 @@ Run `GC_CpG_content_autosomes_sex-chromosomes.R` to compare distributions of GC 
 From the annotation of repeats it is clear that mdg4 elements contribute a substantial proportion of the total repetitive sequence on the W chromosome, which is over 80% repetitive. With this provisional result, we will examine variation in overall repeat content across the genome, along with a focus on mdg4 element abundance.
 
 ### Set up environment
-
 ```
 mkdir repeats
 ```
@@ -848,10 +847,17 @@ python fasta_seq_length.py ./resources/annotation/Cviridis_CV0650_candidate_W.re
 ```
 
 Then, run `scaffold_mdg4_repeat_content.py` to quantify repeat content per W scaffold.
-
 ```
 python scaffold_mdg4_repeat_content.py ./resources/Cviridis_CV0650_candidate_W.rescaffold.rename.lengths.txt ./resources/annotation/Cviridis_CV0650_candidate_W.rescaffold.rename.full_mask.reformat.gff3 ./repeats/Cviridis_CV0650_candidate_W.repeat_content_mdg4.txt
 ```
+
+### Quantify overall mdg4 content on autosomes and the Z chromosome
+
+As with GC content, these analyses will be performed in 10 kb sliding windows. First, extract mdg4 annotations from male reference annotation (these were annotated as their unfortunate synonym 'Gypsy' elements based on RepeatMasker libraries).
+```
+touch ./repeats/CroVir_genome_L77pg_16Aug2017.final.reformat.mdg4.sort.gff; grep "Gypsy" ./genome_crotalus/CroVir_genome_L77pg_16Aug2017.final.reformat.repeat.masked.sort.gff >> ./repeats/CroVir_genome_L77pg_16Aug2017.final.reformat.mdg4.sort.gff
+```
+
 
 
 
