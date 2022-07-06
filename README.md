@@ -26,7 +26,7 @@ Feel free to email me at drew.schield[at]colorado.edu with any questions.
 * [W-specific gene duplications](#w-specific-gene-duplications)
 * [Sex-linked divergence between pitvipers](#sex-linked-divergence-between-pitvipers)
 * [ZW gametolog GC3 analysis](#zw-gametolog-GC3-analysis)
-* [Appendix: Indian cobra analysis](#appendix-1-indian-cobra-analysis) 
+* [Appendix: Indian cobra analysis](#appendix-indian-cobra-analysis) 
 
 ## Software and dependencies
 
@@ -1228,11 +1228,6 @@ UNDER CONSTRUCTION
 ## Appendix: Indian cobra analysis
 
 UNDER CONSTRUCTION
-
-
-#																						 #
-#			  			  X.5 Mean estimates in sliding windows							 #
-#																						 #
 
 
 
