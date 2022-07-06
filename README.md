@@ -1229,8 +1229,10 @@ UNDER CONSTRUCTION
 
 UNDER CONSTRUCTION
 
-#			  			  X.5 Mean estimates in sliding windows							 #
 
+#																						 #
+#			  			  X.5 Mean estimates in sliding windows							 #
+#																						 #
 
 
 
