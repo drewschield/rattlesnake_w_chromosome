@@ -1097,9 +1097,6 @@ ggplot(all.res,aes(x=overlap,y=description,alpha=signif,fill=database)) +
   theme_classic() + theme(strip.background = element_rect(fill = 'grey30',colour = 'NA'),strip.text = element_text(color='white'))
 ```
 
-
-## W-specific gene duplications
-
 #### X. GO term overrepresentation analysis of duplicated and translocated genes.
 The following analyses are performed in R. 
 
