@@ -20,7 +20,7 @@ Feel free to email me at drew.schield[at]colorado.edu with any questions.
 * [Repeat content](#repeat-content)
 * [mdg4 retroelement GC-richness](#mdg4-retroelement-gc-richness)
 * [Annotation of full-length LTR elements](#annotation-of-full-length-ltr-elements)
-* [Refugium & toxicity index analyses](#refugium-&-toxicity-index-analyses)
+* [Refugium and toxicity index analyses](#refugium-and-toxicity-index-analyses)
 * [Gene expression analysis](#gene-expression-analysis)
 * [W-specific gene duplications](#w-specific-gene-duplications)
 * [Sex-linked divergence between pitvipers](#sex-linked-divergence-between-pitvipers)
@@ -950,7 +950,7 @@ rm tmp.output.gff
 
 Note: comparisons of full-length LTRs including these outputs will be restricted to the chromosome-assigned scaffolds.
 
-## Refugium & toxicity index analyses
+## Refugium and toxicity index analyses
 
 Calculation of the refugium and toxicity indices for all repeat elements and specific classes is done based on the annotations described in the sections above. Quantitative details from these annotations are found in the [online supplement](https://oup.silverchair-cdn.com/oup/backfile/Content_public/Journal/gbe/14/9/10.1093_gbe_evac116/2/evac116_supplementary_data.zip?Expires=1667927995&Signature=C78XU3xHv7GsI2uW83wfbVxvRVOtPcfZ-xjCNYv5SatclEk3N3Pxh6cOCu5eeULt732NxEIVDSv8ElkiQ7vqtFOLb5toHRLE755974IUKHH9ZhKH5QmUNyW9mqRKcd2pX7aHPJwN8EGgAvAppGvgYZ0IGxAm-QpNNwNp94eP2KhJtAHfIHsDagLKLP3~oGcAiZI9eFoj5tZH8YVSK4pD3IIROWfcohbGRS08oxoNTYeN1kdYbTO2R7DyJcQ6aTbjXFj4o7fQjyGFAIJ241O2OKLkb2TlKe8C2GZsxlgXWJYOHsea7LaGGNRAl0r28iNhN0JP2coejJ1mDGcnsz~BnQ__&Key-Pair-Id=APKAIE5G5CRDK6RD3PGA) for the paper.
 
