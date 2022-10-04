@@ -18,7 +18,7 @@ Feel free to email me at drew.schield[at]colorado.edu with any questions.
 * [Comparative Z chromosome mapping in caenophidan snakes](#comparative-z-chromosome-mapping-in-caenophidian-snakes)
 * [GC and CpG content](#gc-and-cpg-content)
 * [Repeat content](#repeat-content)
-* [mdg4 element GC-richness](#mdg4-element-gc-richness)
+* [mdg4 retroelement GC-richness](#mdg4-retroelement-gc-richness)
 * [Annotation of full-length LTR elements](#annotation-of-full-length-ltr-elements)
 * [Refugium index analysis](#refugium-index-analysis)
 * [Toxicity index analysis](#toxicity-index-analysis)
