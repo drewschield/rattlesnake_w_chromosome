@@ -20,8 +20,7 @@ Feel free to email me at drew.schield[at]colorado.edu with any questions.
 * [Repeat content](#repeat-content)
 * [mdg4 retroelement GC-richness](#mdg4-retroelement-gc-richness)
 * [Annotation of full-length LTR elements](#annotation-of-full-length-ltr-elements)
-* [Refugium index analysis](#refugium-index-analysis)
-* [Toxicity index analysis](#toxicity-index-analysis)
+* [Refugium & toxicity index analyses](#refugium-toxicity-index-analyses)
 * [Gene expression analysis](#gene-expression-analysis)
 * [W-specific gene duplications](#w-specific-gene-duplications)
 * [Sex-linked divergence between pitvipers](#sex-linked-divergence-between-pitvipers)
@@ -855,58 +854,107 @@ Run `./R/mdg4_element_GC_content.R` to compare distributions of GC content and t
 
 ### 1. Identification of full-length LTR retroelements on the W chromosome
 
-Retrieve search databases:
+Comparisons of full-length retroelements across the genome will be useful for understanding if the W chromosome acts as a 'refugium' for active or recently active elements capable of self-replication. Identification of full-length elements will make use of LTRharvest, which is part of the GenomeTools suite.
+
+#### Set up environment
+```
+mkdir ./repeats/LTRharvest
+mkdir ./repeats/LTRharvest/hmm
+mkdir ./repeats/LTRharvest/fasta
+cd ./repeats/LTRharvest
+```
+
+#### Retrieve and format search databases
+
+The databases are available here:
 * [Pfam](http://pfam.xfam.org/) - downloads are available under the `FTP` tab -> `current_release`.
 * [GyDB](https://gydb.org/index.php/Collection_HMM)
 
+Move hmm files from databases into `hmm` subdirectory.
+```
+wget https://gydb.org/extensions/Collection/collection/db/GyDB_collection.zip
+unzip GyDB_collection.zip
+cd GyDB_collection/profiles
+cp *.hmm ../../
+cd ../../
+rm GyDB_collection.zip
 
+wget http://ftp.ebi.ac.uk/pub/databases/Pfam/current_release/Pfam-A.hmm.gz
+gunzip Pfam-A.hmm.gz
+```
 
+#### Prepare input data and run LTRharvest
 
+First, generate an index for the input sequence data.
+```
+gt suffixerator -db ./resources/annotation/Cviridis_CV0650_candidate_W.rescaffold.rename.fasta -indexname Cviridis_CV0650_candidate_W.rescaffold.rename.fasta -tis -suf -lcp -des -ssp -sds -dna
+```
 
+Run LTRharvest to prepare the genome data.
+```
+gt ltrharvest -index ./resources/annotation/Cviridis_CV0650_candidate_W.rescaffold.rename.fasta -gff3 Cviridis_CV0650_candidate_W.rescaffold.rename.fasta.gff -out Cviridis_CV0650_candidate_W.rescaffold.rename.fasta.ltr.fa
+gt ltrharvest -index ./resources/annotation/Cviridis_CV0650_candidate_W.rescaffold.rename.fasta -seqids yes -tabout no > Cviridis_CV0650_candidate_W.rescaffold.rename.ltrharvest.out
+```
 
+Run LTRdigest to extract full-length LTR elements.
+```
+gt gff3 -sortlines yes -retainids yes -tidy yes -fixregionboundaries yes -checkids yes Cviridis_CV0650_candidate_W.rescaffold.rename.fasta.gff > Cviridis_CV0650_candidate_W.rescaffold.rename.fasta.sorted.gff
+mv Cviridis_CV0650_candidate_W.rescaffold.rename.fasta.sorted.gff Cviridis_CV0650_candidate_W.rescaffold.rename.fasta.gff
+gt ltrdigest -hmms ./hmm/*.hmm -aaout yes -outfileprefix Cviridis_CV0650_candidate_W.rescaffold.rename.fasta_ltrdigest Cviridis_CV0650_candidate_W.rescaffold.rename.fasta.gff ./resources/annotation/Cviridis_CV0650_candidate_W.rescaffold.rename.fasta > Cviridis_CV0650_candidate_W.rescaffold.rename.fasta_ltrdigest_output_gff
+```
 
+Move individual digest sequence files to the `fasta` subdirectory.
+```
+mv *.fas ./fasta
+```
 
+Extract GFF entries for full-length LTRs.
+```
+grep -v '#' Cviridis_CV0650_candidate_W.rescaffold.rename.fasta_ltrdigest_output_gff | awk '$3 == "LTR_retrotransposon" {print}' > fl-LTR.Cviridis_CV0650_candidate_W.rescaffold.rename.gff
+```
 
+### 2. Identification of full-length LTRs on autosomes and the Z chromosome
 
+#### Prepare input data and run LTRharvest
 
+Generate index for sequence file.
 
+```
+gt suffixerator -db CroVir_genome_L77pg_16Aug2017.final_rename.fasta -indexname CroVir_genome_L77pg_16Aug2017.final_rename.fasta -tis -suf -lcp -des -ssp -sds -dna
+```
 
+Run LTRharvest to prepare the sequence file.
+```
+gt ltrharvest -index CroVir_genome_L77pg_16Aug2017.final_rename.fasta -gff3 CroVir_genome_L77pg_16Aug2017.final_rename.fasta.gff -out CroVir_genome_L77pg_16Aug2017.final_rename.fasta.ltr.fa
+gt ltrharvest -index CroVir_genome_L77pg_16Aug2017.final_rename.fasta -seqids yes -tabout no > CroVir_genome_L77pg_16Aug2017.final_rename.ltrharvest.out
+```
 
+Run LTRdigest to extract full-length LTRs.
+```
+gt gff3 -sortlines yes -retainids yes -tidy yes -fixregionboundaries yes -checkids yes CroVir_genome_L77pg_16Aug2017.final_rename.fasta.gff > CroVir_genome_L77pg_16Aug2017.final_rename.fasta.sorted.gff
+mv CroVir_genome_L77pg_16Aug2017.final_rename.fasta.sorted.gff CroVir_genome_L77pg_16Aug2017.final_rename.fasta.gff
+gt ltrdigest -hmms ./hmm/*.hmm -aaout yes -outfileprefix CroVir_genome_L77pg_16Aug2017.final_rename.fasta_ltrdigest CroVir_genome_L77pg_16Aug2017.final_rename.fasta.gff CroVir_genome_L77pg_16Aug2017.final_rename.fasta > CroVir_genome_L77pg_16Aug2017.final_rename.fasta_ltrdigest_output_gff
+```
 
+Move individual digest sequence files to the `fasta` subdirectory.
+```
+mv *.fas ./fasta
+```
 
+Extract GFF entries for full-length LTRs.
+```
+grep -v '#' CroVir_genome_L77pg_16Aug2017.final_rename.fasta_ltrdigest_output_gff > tmp.output.gff
+for i in $(seq 0 17); do grep -w seq${i} tmp.output.gff >> fl-LTR.CroVir_genome_L77pg_16Aug2017.ChromAssigned.gff; done
+rm tmp.output.gff
+```
 
+Note: comparisons of full-length LTRs including these outputs will be restricted to the chromosome-assigned scaffolds.
 
+## Refugium & toxicity index analyses
 
+Calculation of the refugium and toxicity indices for all repeat elements and specific classes is done based on the annotations described in the sections above. Quantitative details from these annotations are found in the [online supplement](https://oup.silverchair-cdn.com/oup/backfile/Content_public/Journal/gbe/14/9/10.1093_gbe_evac116/2/evac116_supplementary_data.zip?Expires=1667927995&Signature=C78XU3xHv7GsI2uW83wfbVxvRVOtPcfZ-xjCNYv5SatclEk3N3Pxh6cOCu5eeULt732NxEIVDSv8ElkiQ7vqtFOLb5toHRLE755974IUKHH9ZhKH5QmUNyW9mqRKcd2pX7aHPJwN8EGgAvAppGvgYZ0IGxAm-QpNNwNp94eP2KhJtAHfIHsDagLKLP3~oGcAiZI9eFoj5tZH8YVSK4pD3IIROWfcohbGRS08oxoNTYeN1kdYbTO2R7DyJcQ6aTbjXFj4o7fQjyGFAIJ241O2OKLkb2TlKe8C2GZsxlgXWJYOHsea7LaGGNRAl0r28iNhN0JP2coejJ1mDGcnsz~BnQ__&Key-Pair-Id=APKAIE5G5CRDK6RD3PGA) for the paper.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-UNDER CONSTRUCTION
-
-## Refugium index analysis
-
-UNDER CONSTRUCTION
-
-## Toxicity index analysis
-
-UNDER CONSTRUCTION
+To perform the statistical tests of the refugium hypothesis, run `./R/repeat_refugium_hypothesis_tests.R`.
 
 ## Gene expression analysis
 
