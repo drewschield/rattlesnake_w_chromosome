@@ -789,10 +789,65 @@ Then run `window_mdg4_repeat_content.py` to calculate mdg4 content in 10 kb wind
 python window_mdg4_repeat_content.py ./resources/CroVir_Dovetail_10Kb_window.bed ./repeats/CroVir_genome_L77pg_16Aug2017.final.reformat.mdg4.sort.gff ./repeats/CroVir_genome.repeat_content_mdg4.10kb.txt
 ```
 
-
 ## mdg4 retroelement GC-richness
 
-UNDER CONSTRUCTION
+The large abundance of mdg4 elements on the W chromosome may influence its overall nucleotide composition (i.e., GC-richness) if these elements also tend to be GC-rich.
+
+### 1. GC content of repeat elements in snake library
+
+First, examine the GC content of non-redundant elements in the snake transposable element library used to annotate the genome, which is in `./resources/Snakes_Known_TElib.fasta`.
+```
+python scaffold_gc.py ./resources/Snakes_Known_TElib.fasta ./repeats/Snakes_Known_TElib.GC.txt
+```
+
+Parse mdg4 results and remove redundant results.
+```
+touch ./repeats/Snakes_Known_TElib.mdg4.GC.txt; echo -e "chrom\tGC_content" >> ./repeats/Snakes_Known_TElib.mdg4.GC.txt; grep 'Gypsy' ./repeats/Snakes_Known_TElib.GC.txt | awk '!seen[$0] {print} {++seen[$0]}' >> Snakes_Known_TElib.mdg4.GC.txt
+```
+
+Replace '#' and '/' in output to make results readable in R.
+```
+sed -i 's/#/_/' ./repeats/Snakes_Known_TElib.GC.txt; sed -i.bak 's./._.g' ./repeats/Snakes_Known_TElib.GC.txt
+sed -i 's/#/_/' ./repeats/Snakes_Known_TElib.mdg4.GC.txt; sed -i.bak 's./._.g' ./repeats/Snakes_Known_TElib.mdg4.GC.txt
+```
+
+Compare mdg4 element GC to all elements using `./R/mdg4_element_GC_content.R`.
+
+### 2. GC-richness of annotated mdg4 elements on the W chromosome & correlations between GC content and mdg4 density
+
+Convert repeat annotation GFF to BED format.
+```
+grep "^[^#]" ./resources/annotation/Cviridis_CV0650_candidate_W.rescaffold.rename.full_mask.reformat.gff3 | awk 'BEGIN{OFS="\t"} {print $1,$4-1,$5,$9}' - > ./resources/annotation/Cviridis_CV0650_candidate_W.rescaffold.rename.full_mask.reformat.bed
+```
+
+Use bedtools `getfasta` to extract sequence of each annotated repeat element. The -name flag specifies to name the output sequence based on the fourth input column.
+```
+bedtools getfasta -fi ./resources/annotation/Cviridis_CV0650_candidate_W.rescaffold.rename.fasta -bed ./resources/annotation/Cviridis_CV0650_candidate_W.rescaffold.rename.full_mask.reformat.bed -name -fo ./repeats/Cviridis_CV0650_candidate_W.rescaffold.rename.full_mask.reformat.fasta
+```
+
+Run `scaffold_gc.py` to calculate GC content per extracted sequence.
+```
+python scaffold_gc.py ./repeats/Cviridis_CV0650_candidate_W.rescaffold.rename.full_mask.reformat.fasta ./repeats/Cviridis_CV0650_candidate_W.rescaffold.rename.full_mask.reformat.repeats_all.GC.txt
+```
+
+Extract entries for mdg4, L1, and L2 elements.
+```
+touch ./repeats/Cviridis_CV0650_candidate_W.rescaffold.rename.full_mask.reformat.repeats_mdg4.GC.txt; echo -e 'chrom\tGC_content' >> ./repeats/Cviridis_CV0650_candidate_W.rescaffold.rename.full_mask.reformat.repeats_mdg4.GC.txt; grep 'Gypsy' ./repeats/Cviridis_CV0650_candidate_W.rescaffold.rename.full_mask.reformat.repeats_all.GC.txt >> ./repeats/Cviridis_CV0650_candidate_W.rescaffold.rename.full_mask.reformat.repeats_mdg4.GC.txt
+touch ./repeats/Cviridis_CV0650_candidate_W.rescaffold.rename.full_mask.reformat.repeats_L1-CIN4.GC.txt; echo -e 'chrom\tGC_content' >> ./repeats/Cviridis_CV0650_candidate_W.rescaffold.rename.full_mask.reformat.repeats_L1-CIN4.GC.txt; grep 'L1' ./repeats/Cviridis_CV0650_candidate_W.rescaffold.rename.full_mask.reformat.repeats_all.GC.txt >> ./repeats/Cviridis_CV0650_candidate_W.rescaffold.rename.full_mask.reformat.repeats_L1-CIN4.GC.txt; grep 'CIN4' ./repeats/Cviridis_CV0650_candidate_W.rescaffold.rename.full_mask.reformat.repeats_all.GC.txt >> ./repeats/Cviridis_CV0650_candidate_W.rescaffold.rename.full_mask.reformat.repeats_L1-CIN4.GC.txt
+touch ./repeats/Cviridis_CV0650_candidate_W.rescaffold.rename.full_mask.reformat.repeats_L2-CR1-Rex.GC.txt; echo -e 'chrom\tGC_content' >> ./repeats/Cviridis_CV0650_candidate_W.rescaffold.rename.full_mask.reformat.repeats_L2-CR1-Rex.GC.txt; grep 'L2' ./repeats/Cviridis_CV0650_candidate_W.rescaffold.rename.full_mask.reformat.repeats_all.GC.txt >> ./repeats/Cviridis_CV0650_candidate_W.rescaffold.rename.full_mask.reformat.repeats_L2-CR1-Rex.GC.txt; grep 'CR1' ./repeats/Cviridis_CV0650_candidate_W.rescaffold.rename.full_mask.reformat.repeats_all.GC.txt >> ./repeats/Cviridis_CV0650_candidate_W.rescaffold.rename.full_mask.reformat.repeats_L2-CR1-Rex.GC.txt; grep 'Rex' ./repeats/Cviridis_CV0650_candidate_W.rescaffold.rename.full_mask.reformat.repeats_all.GC.txt >> ./repeats/Cviridis_CV0650_candidate_W.rescaffold.rename.full_mask.reformat.repeats_L2-CR1-Rex.GC.txt
+```
+
+Filter all repeats output to remove simple sequence repeats.
+```
+grep -v ')n' ./repeats/Cviridis_CV0650_candidate_W.rescaffold.rename.full_mask.reformat.repeats_all.GC.txt > ./repeats/Cviridis_CV0650_candidate_W.rescaffold.rename.full_mask.reformat.repeats_all.filter.GC.txt
+```
+
+Remove mdg4 elements from background for comparison with non-mdg4 elements.
+```
+grep -v 'Gypsy' ./repeats/Cviridis_CV0650_candidate_W.rescaffold.rename.full_mask.reformat.repeats_all.GC.txt > ./repeats/Cviridis_CV0650_candidate_W.rescaffold.rename.full_mask.reformat.repeats_no-mdg4.GC.txt
+```
+
+Run `./R/mdg4_element_GC_content.R` to compare distributions of GC content and to calculate correlation coefficients between mdg4 density and GC content across W-linked scaffolds.
 
 ## Annotation of full-length LTR elements
 
