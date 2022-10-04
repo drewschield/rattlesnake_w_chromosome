@@ -15,7 +15,7 @@ Feel free to email me at drew.schield[at]colorado.edu with any questions.
 * [Identification of W chromosome scaffolds](#identification-of-w-chromosome-scaffolds)
 * [W chromosome annotation](#w-chromosome-annotation)
 * [ZW gametolog divergence](#zw-gametolog-divergence)
-* [Comparative Z chromosome mapping in caenophidan snakes](#comparative-z-chromosome-mapping-in-caenophidian-snakes)
+* [Comparative Z chromosome mapping in caenophidian snakes](#comparative-z-chromosome-mapping-in-caenophidian-snakes)
 * [GC and CpG content](#gc-and-cpg-content)
 * [Repeat content](#repeat-content)
 * [mdg4 retroelement GC-richness](#mdg4-retroelement-gc-richness)
