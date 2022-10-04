@@ -20,7 +20,7 @@ Feel free to email me at drew.schield[at]colorado.edu with any questions.
 * [Repeat content](#repeat-content)
 * [mdg4 retroelement GC-richness](#mdg4-retroelement-gc-richness)
 * [Annotation of full-length LTR elements](#annotation-of-full-length-ltr-elements)
-* [Refugium & toxicity index analyses](#refugium-toxicity-index-analyses)
+* [Refugium & toxicity index analyses](#refugium-&-toxicity-index-analyses)
 * [Gene expression analysis](#gene-expression-analysis)
 * [W-specific gene duplications](#w-specific-gene-duplications)
 * [Sex-linked divergence between pitvipers](#sex-linked-divergence-between-pitvipers)
