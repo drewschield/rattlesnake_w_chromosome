@@ -52,6 +52,8 @@ The analysis sections below use the following software and dependencies and assu
 * [mosdepth](https://github.com/brentp/mosdepth)
 * [GffRead](https://github.com/gpertea/gffread)
 * [PAML](http://abacus.gene.ucl.ac.uk/software/paml.html)
+* [GenomeTools](https://github.com/genometools/genometools)
+* [HMMER](https://github.com/EddyRivasLab/hmmer)
 * [STAR](https://github.com/alexdobin/STAR)
 * [R](https://cran.r-project.org/)
 
@@ -850,6 +852,51 @@ grep -v 'Gypsy' ./repeats/Cviridis_CV0650_candidate_W.rescaffold.rename.full_mas
 Run `./R/mdg4_element_GC_content.R` to compare distributions of GC content and to calculate correlation coefficients between mdg4 density and GC content across W-linked scaffolds.
 
 ## Annotation of full-length LTR elements
+
+### 1. Identification of full-length LTR retroelements on the W chromosome
+
+Retrieve search databases:
+* [Pfam](http://pfam.xfam.org/) - downloads are available under the `FTP` tab -> `current_release`.
+* [GyDB](https://gydb.org/index.php/Collection_HMM)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 UNDER CONSTRUCTION
 
