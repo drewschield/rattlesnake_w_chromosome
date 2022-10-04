@@ -1097,7 +1097,7 @@ ggplot(all.res,aes(x=overlap,y=description,alpha=signif,fill=database)) +
   theme_classic() + theme(strip.background = element_rect(fill = 'grey30',colour = 'NA'),strip.text = element_text(color='white'))
 ```
 
-#### X. GO term overrepresentation analysis of duplicated and translocated genes.
+#### 6. GO term overrepresentation analysis of duplicated and translocated genes.
 The following analyses are performed in R. 
 
 Set up environment and read in data.
