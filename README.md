@@ -1446,9 +1446,32 @@ rm tmp.bed
 
 Run `./R/gene_duplication_coverage.R` to evaluate relative coverage per W-linked gene across samples. The script also references the data in `./resources/W_copy-number.txt` based on analysis in the first part of the script, which has been formatted with matching Z gametolog coordinates per W-linked gene.
 
-
+[Back to top](#contents) 
 
 ## Sex-linked divergence between pitvipers
+This section describes steps to estimate sequence divergence between Crotalus and Deinagkistrodon sex chromosomes.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 UNDER CONSTRUCTION
 
