@@ -1395,7 +1395,6 @@ Run bwa mem to map short reads to reference per sample based on this command.
 ```
 bwa mem -t 16 -R "@RG\tID:$name\tLB:CVOS\tPL:illumina\tPU:NovaSeq6000\tSM:$name" ../CroVir_genome_L77pg_16Aug2017.final_rename.fasta ./fastq_filtered/${name}_R1_P.trim.fastq.gz ./fastq_filtered/${name}_R2_P.trim.fastq.gz | samtools sort -@ 16 -O bam -T temp -o ./bam/$name.bam -
 ```
-
 Instances of '$name' should be replaced with the specific sample to analyze.
 
 #### Index the bam files.
@@ -1406,9 +1405,71 @@ for i in ./bam/*.bam; do samtools index $i; done
 #### Calculate mapping statistics
 
 Generate a bed file for exons after retrieving and unzipping the autosome/Z chromosome gene annotation [here](https://figshare.com/ndownloader/files/16522322).
-
 ```
 awk 'BEGIN{OFS="\t"} {if ($3 == "exon") print $1, $4-1, $5, $9}' ./CroVir_rnd1.all.maker.final.homologIDs.gff | bedtools sort -i - > ./CroVir_rnd1.all.maker.final.homologIDs.exon.sort.bed 
+```
+Run `mosdepth_mean.sh` to calculate mean read depths per feature for each sample.
+```
+sh mosdepth_mean.sh CroVir_rnd1.all.maker.final.homologIDs.exon.sort.bed exon CroVir
+``` 
+Check that each feature (exon) has data per individual.
+```
+gunzip ./results/*.gz
+for i in ./results/*.regions.bed; do cat $i | wc -l; done
+```
+The outputs should be the same for each sample.
+
+Concatenate results into data table.
+```
+echo -e 'chrom\tstart\tend\tfeature\tCV0011\tCV0629\tCV0646\tCV0650' > female.all.CroVir.exon.regions.bed; paste ./results/female.CV0011.CroVir.exon.regions.bed ./results/female.CV0629.CroVir.exon.regions.bed ./results/female.CV0646.CroVir.exon.regions.bed ./results/female.CV0650.CroVir.exon.regions.bed | awk 'BEGIN{OFS="\t"}{print $1,$2,$3,$4,$5,$10,$15,$20}' >> female.all.CroVir.exon.regions.bed
+sed '/scaffold-un/d' female.all.CroVir.exon.regions.bed > female.all.CroVir.exon.regions.CHROM.bed
+rm female.all.CroVir.exon.regions.bed
+```
+Filter out Z chromosome results (to get autosomal distribution).
+```
+grep -v 'scaffold-Z' female.all.CroVir.exon.regions.CHROM.bed > female.all.autosome.CroVir.exon.regions.CHROM.bed
+```
+
+### 2. Coverage of genes on the W chromosome
+
+These steps are based on a combined autosome, Z chromosome, and W chromosome scaffold set, so that Z gametologs are not spuriously mapped to the W chromosome based on sufficient similarity.
+
+#### Generate combined scaffold set
+
+Concatenate scaffolds and index output.
+```
+cat ../CroVir_genome_L77pg_16Aug2017.final_rename.fasta ../resources/annotation/Cviridis_CV0650_candidate_W.rescaffold.rename.fasta > CroVir_genome_chrW_agouti.fasta
+bwa index CroVir_genome_chrW_agouti.fasta
+```
+
+#### Map reads to the combined assembly
+
+Run bwa mem per sample following this command.
+```
+bwa mem -t 4 -R "@RG\tID:$i\tLB:CVOS\tPL:illumina\tPU:NovaSeq6000\tSM:$i" ./CroVir_genome_chrW_agouti.fasta ./fastq_filtered/${i}_R1_P.trim.fq.gz ./fastq_filtered/${i}_R2_P.trim.fq.gz | samtools sort -@ 4 -O bam -T $i | samtools view -F 4 -o ./bam/$i.bam -
+```
+Index output bam files.
+```
+for in ./bam/*.bam; do samtools index $i; done
+```
+
+#### Calculate mapping statistics
+
+Generate bed file of W-linked genes.
+```
+awk 'BEGIN{OFS="\t"} {if ($3 == "gene") print $1, $4-1, $5, $9}' ../resources/annotation/croVir_Wscaff_rnd2_alt.all.maker.noseq.gff3 | bedtools sort -i - > ./croVir_Wscaff_rnd2_alt.all.maker.noseq.gene.sort.bed
+```
+Generate bed file of W-linked exons.
+```
+awk 'BEGIN{OFS="\t"} {if ($3 == "exon") print $1, $4-1, $5, $9}' ../resources/annotation/croVir_Wscaff_rnd2_alt.all.maker.noseq.gff3 | bedtools sort -i - > ./croVir_Wscaff_rnd2_alt.all.maker.noseq.exon.sort.bed
+```
+Run `mosdepth_mean.sh` to calculate mean depth per feature on the W chromosome.
+```
+sh mosdepth_mean.sh croVir_Wscaff_rnd2_alt.all.maker.noseq.exon.sort.bed exon agouti
+```
+Run `mosdepth_mean.sh` to calculate mean depth per feature on the autosomes and Z chromosome.
+```
+sh mosdepth_mean.sh CroVir_rnd1.all.maker.final.homologIDs.exon.sort.bed exon CroVir
 ```
 
 
