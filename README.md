@@ -25,7 +25,6 @@ Feel free to email me at drew.schield[at]colorado.edu with any questions.
 * [W-specific gene duplications](#w-specific-gene-duplications)
 * [Sex-linked divergence between pitvipers](#sex-linked-divergence-between-pitvipers)
 * [ZW gametolog GC3 analysis](#zw-gametolog-GC3-analysis)
-* [Appendix: Indian cobra analysis](#appendix-indian-cobra-analysis) 
 
 ## Software and dependencies
 
@@ -1644,13 +1643,6 @@ touch ZW_gametolog_GC3.txt; echo -e 'chrom\tstart\tZ_GC3\tW_GC3' >> ZW_gametolog
 ```
 
 [Back to top](#contents)
-
-## Appendix: Indian cobra analysis
-
-UNDER CONSTRUCTION
-
-
-
 
 
 
