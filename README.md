@@ -1628,9 +1628,22 @@ sh parseCodeml_orthologs.sh > crotalusW_deinagkistrodon.dnds.txt
 ```
 This script calls the `parse_codeml_output.py` script available [here](https://github.com/faylward/dnds) and modified slightly to print 'NA's for filtered results.
 
+[Back to top](#contents)
+
 ## ZW gametolog GC3 analysis
 
-UNDER CONSTRUCTION
+#### Set up environment
+```
+cd ./composition/gc
+```
+
+#### Calculate GC3 for Z and W gametolog pairs 
+Run `ZW_gametolog_GC3.py` to quantify GC3 content per pair based on aligned sequences in `./divergence/crotalus/ZW_gametolog_aln/`
+```
+touch ZW_gametolog_GC3.txt; echo -e 'chrom\tstart\tZ_GC3\tW_GC3' >> ZW_gametolog_GC3.txt; for gene in ../../divergence/crotalus/ZW_gametolog_aln/*pal2nal.fasta; do python ZW_gametolog_gc3.py $gene >> ZW_gametolog_GC3.txt; done
+```
+
+[Back to top](#contents)
 
 ## Appendix: Indian cobra analysis
 
