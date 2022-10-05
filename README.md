@@ -960,7 +960,7 @@ To perform the statistical tests of the refugium hypothesis, run `./R/repeat_ref
 
 For inquiries about the following gene expression analyses, please contact blair.perry[at]wsu.edu
 
-#### 1. Map RNA-seq data to updated genome annotation
+### 1. Map RNA-seq data to updated genome annotation
 Quality trim raw RNA-seq reads with [Trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic). This step was also used to give each sample a simpler alias (i.e., Kid_24h_CV3_Cvv19_CAGGCG -> kidneyF1).
 ```bash
 trimmomatic PE Cvv29_TACAGC_L005_R1_001.fastq.gz Cvv29_TACAGC_L005_R2_001.fastq.gz testes_forward_paired.fq.gz testes_forward_unpaired.fq.gz testes_reverse_paired.fq.gz testes_reverse_unpaired.fq.gz ILLUMINACLIP:TruSeq3-PE.fa:2:30:10:2:keepBothReads LEADING:3 TRAILING:3 MINLEN:36
@@ -996,7 +996,7 @@ Quantify reads using [featureCounts](http://subread.sourceforge.net/). Note that
 featureCounts -p -t exon -g transcript_id -a ./reference/crovir_wWannot.gtf -o .raw_counts/cvv_ref1_rawCounts_12.18.21.txt STAR_mapped/*Aligned.sortedByCoord.out.bam 
 ```
 
-#### 2. Assess "detectable" expression in male and female samples.
+### 2. Assess "detectable" expression in male and female samples.
 Assess whether genes are detected (raw count > 0) in male and female samples.
 Note: The following code is all run within R. 
 
@@ -1070,7 +1070,7 @@ autoZW.unique.raw_counts.simple.Wonly %>%
 # Unknown: 48 expressed, 45 not
 ```
 
-#### 3. Perform pairwise comparisons between male and female samples
+### 3. Perform pairwise comparisons between male and female samples
 Use [DEseq2](https://bioconductor.org/packages/release/bioc/html/DESeq2.html) to perform pariwise comparisons between male and female samples. 
 ```R
 # Filter out genes with no expression across all samples
@@ -1150,7 +1150,7 @@ tpm.counts.final <- as_tibble(tpm.counts) %>%
 write_tsv(tpm.counts.final,'_autoZW.allGene.TPMCounts_03.02.22.tsv')
 ```
 
-#### 4. Plot heatmap of ZW gametolog expression
+### 4. Plot heatmap of ZW gametolog expression
 Read in TPM counts and filter to W chromosome genes only, add column indicating whether a gene is upregulated/biased in females.
 ```R
 tpm.counts <- read_tsv('_autoZW.allGene.TPMCounts_03.02.22.tsv') %>% 
@@ -1190,7 +1190,7 @@ pheatmap(log10(exp.zw.maleFemaleHeat.noUnknown+1),
          annotation_row = exp.zw.femaleHeat.annot.noUnknown)
 ```
 
-#### 5. Characterize genes with female-biased expression using GO term analyses.
+### 5. Characterize genes with female-biased expression using GO term analyses.
 
 Load in foreground (genes on W chromsome) and background (genes not on W chromosome) gene lists.
 ```R
@@ -1247,7 +1247,7 @@ ggplot(all.res,aes(x=overlap,y=description,alpha=signif,fill=database)) +
   theme_classic() + theme(strip.background = element_rect(fill = 'grey30',colour = 'NA'),strip.text = element_text(color='white'))
 ```
 
-#### 6. GO term overrepresentation analysis of duplicated and translocated genes.
+### 6. GO term overrepresentation analysis of duplicated and translocated genes.
 The following analyses are performed in R. 
 
 Set up environment and read in data.
@@ -1362,7 +1362,48 @@ ggplot(trans.all.res,aes(x=overlap,y=description,alpha=signif,fill=database)) +
 
 ## W-specific gene duplications
 
-UNDER CONSTRUCTION
+Short read data from multiple individuals can be used to get a coarse sense of gene-specific copy number (i.e., greater than one copy), and whether putative duplicates are specific to the W chromosome. These analyses will use mapping statistics of female read data to the male reference, containing all autosomes and the Z chromosome, and to the new W chromosome sequence.
+
+### 1. Coverage of genes on autosomes and the Z chromosome
+
+#### Set up environment
+
+```
+mkdir coverage_exp_crotalus
+mkdir coverage_exp_crotalus/fastq
+mkdir coverage_exp_crotalus/fastq_filtered
+mkdir coverage_exp_crotalus/bam
+mkdir coverage_exp_crotalus/results
+cd coverage_exp_crotalus
+```
+
+#### Run trimmomatic on the raw read data
+
+Read data for female rattlesnakes are available on [NCBI](https://www.ncbi.nlm.nih.gov/bioproject/?term=PRJNA593834) at accession PRJNA593834. Store them in `./fastq/`
+
+Run trimmomatic on each sample based on this command.
+```
+trimmomatic PE -phred33 -threads 16 ./fastq/${name}_*_R1_001.fastq.gz ./fastq/${name}_*_R2_001.fastq.gz ./fastq_filtered/${name}_R1_P.trim.fastq.gz ./fastq_filtered/${name}_R1_U.trim.fastq.gz ./fastq_filtered/${name}_R2_P.trim.fastq.gz ./fastq_filtered/${name}_R2_U.trim.fastq.gz LEADING:20 TRAILING:20 MINLEN:32 AVGQUAL:30
+```
+
+#### Map filtered data to autosomes and the Z chromosome
+
+Run bwa mem to map short reads to reference per sample based on this command.
+```
+bwa mem -t 16 -R "@RG\tID:$name\tLB:CVOS\tPL:illumina\tPU:NovaSeq6000\tSM:$name" ../CroVir_genome_L77pg_16Aug2017.final_rename.fasta ./fastq_filtered/${name}_R1_P.trim.fastq.gz ./fastq_filtered/${name}_R2_P.trim.fastq.gz | samtools sort -@ 16 -O bam -T temp -o ./bam/$name.bam -
+```
+
+Instances of '$name' should be replaced with the specific sample to analyze.
+
+
+
+
+
+
+
+
+
+
 
 ## Sex-linked divergence between pitvipers
 
