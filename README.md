@@ -116,6 +116,8 @@ mv ./CV0650_female_Cviridis/outs/assembly/CV0650_10xAssembly_Round3_pseudohap.*.
 rm -r ./CV0650_female_Cviridis/
 ```
 
+[Back to top](#contents)
+
 ## Identification of W chromosome scaffolds
 
 Use homology with the male prairie rattlesnake reference genome and relative female/male read depths on female scaffolds to identify candidate W chromosome scaffolds.
@@ -284,6 +286,8 @@ python scaffold_list_extractor.py ./genome_crotalus_female/CV0650_10xAssembly_Ro
 cat ./W_chromosome_identification/candidate_W/pseudohaplotype1.candidate_W.fasta ./W_chromosome_identification/candidate_W/pseudohaplotype2.candidate_W.fasta > ./W_chromosome_identification/candidate_W/Cviridis_CV0650_candidate_W.fasta
 ```
 
+[Back to top](#contents)
+
 ## W chromosome annotation
 
 ### Repeat elements
@@ -320,6 +324,8 @@ The *de novo* transcriptome and candidate W assembly data were used to improve c
 Repeat and gene annotations were repeated following scaffold improvement.
 
 The W chromosome assembly and annotation files are in the `resources/annotation/` directory. The assembly is also deposited at [NCBI](xxxx).
+
+[Back to top](#contents)
 
 ## ZW gametolog divergence
 
@@ -587,6 +593,8 @@ Parse CODEML results using `parseCodeml_gametologs.sh`.
 sh parseCodeml_gametologs.sh > crotalusZW_gametolog.dnds.txt
 ```
 
+[Back to top](#contents)
+
 ## Comparative Z chromosome mapping in caenophidian snakes
 
 Comparison of female and male read depths across the Z chromosome can reveal differences in relative timing of recombination suppression between the sex chromosomes if compared between different ZW snake species. This section contains details of the analysis comparing log2FM ratios in pitvipers to garter snake (_Thamnophis_).
@@ -669,6 +677,8 @@ mosdepth -t 4 --fast-mode -n -b CroVir_Dovetail_10kb_window.ChromAssigned.bed -f
 ```
 
 Run `comparative_coverage_4species.R` to examine log2FM ratios across the Z chromosome in each species.
+
+[Back to top](#contents)
 
 ## GC and CpG content
 
@@ -757,6 +767,8 @@ python slidingwindow_cpg.py ./genome_mus/GCF_000001635.27_GRCm39_genomic.fna 100
 
 Run `GC_CpG_content_autosomes_sex-chromosomes.R` to compare distributions of GC and CpG content on autosomes and sex chromosomes across the sampled species.
 
+[Back to top](#contents)
+
 ## Repeat content
 
 From the annotation of repeats it is clear that mdg4 elements contribute a substantial proportion of the total repetitive sequence on the W chromosome, which is over 80% repetitive. With this provisional result, we will examine variation in overall repeat content across the genome, along with a focus on mdg4 element abundance.
@@ -789,6 +801,8 @@ Then run `window_mdg4_repeat_content.py` to calculate mdg4 content in 10 kb wind
 ```
 python window_mdg4_repeat_content.py ./resources/CroVir_Dovetail_10Kb_window.bed ./repeats/CroVir_genome_L77pg_16Aug2017.final.reformat.mdg4.sort.gff ./repeats/CroVir_genome.repeat_content_mdg4.10kb.txt
 ```
+
+[Back to top](#contents)
 
 ## mdg4 retroelement GC-richness
 
@@ -849,6 +863,8 @@ grep -v 'Gypsy' ./repeats/Cviridis_CV0650_candidate_W.rescaffold.rename.full_mas
 ```
 
 Run `./R/mdg4_element_GC_content.R` to compare distributions of GC content and to calculate correlation coefficients between mdg4 density and GC content across W-linked scaffolds.
+
+[Back to top](#contents)
 
 ## Annotation of full-length LTR elements
 
@@ -950,11 +966,15 @@ rm tmp.output.gff
 
 Note: comparisons of full-length LTRs including these outputs will be restricted to the chromosome-assigned scaffolds.
 
+[Back to top](#contents)
+
 ## Refugium and toxicity index analyses
 
 Calculation of the refugium and toxicity indices for all repeat elements and specific classes is done based on the annotations described in the sections above. Quantitative details from these annotations are found in the [online supplement](https://oup.silverchair-cdn.com/oup/backfile/Content_public/Journal/gbe/14/9/10.1093_gbe_evac116/2/evac116_supplementary_data.zip?Expires=1667927995&Signature=C78XU3xHv7GsI2uW83wfbVxvRVOtPcfZ-xjCNYv5SatclEk3N3Pxh6cOCu5eeULt732NxEIVDSv8ElkiQ7vqtFOLb5toHRLE755974IUKHH9ZhKH5QmUNyW9mqRKcd2pX7aHPJwN8EGgAvAppGvgYZ0IGxAm-QpNNwNp94eP2KhJtAHfIHsDagLKLP3~oGcAiZI9eFoj5tZH8YVSK4pD3IIROWfcohbGRS08oxoNTYeN1kdYbTO2R7DyJcQ6aTbjXFj4o7fQjyGFAIJ241O2OKLkb2TlKe8C2GZsxlgXWJYOHsea7LaGGNRAl0r28iNhN0JP2coejJ1mDGcnsz~BnQ__&Key-Pair-Id=APKAIE5G5CRDK6RD3PGA) for the paper.
 
 To perform the statistical tests of the refugium hypothesis, run `./R/repeat_refugium_hypothesis_tests.R`.
+
+[Back to top](#contents)
 
 ## Gene expression analysis
 
@@ -1360,6 +1380,8 @@ ggplot(trans.all.res,aes(x=overlap,y=description,alpha=signif,fill=database)) +
   theme_classic() + theme(strip.background = element_rect(fill = 'grey30',colour = 'NA'),strip.text = element_text(color='white'))
 ```
 
+[Back to top](#contents)
+
 ## W-specific gene duplications
 Short read data from multiple individuals can be used to get a coarse sense of gene-specific copy number (i.e., greater than one copy), and whether putative duplicates are specific to the W chromosome. These steps are based on a combined autosome, Z chromosome, and W chromosome scaffold set, so that Z gametologs are not spuriously mapped to the W chromosome based on sufficient similarity.
 
@@ -1446,7 +1468,7 @@ rm tmp.bed
 
 Run `./R/gene_duplication_coverage.R` to evaluate relative coverage per W-linked gene across samples. The script also references the data in `./resources/W_copy-number.txt` based on analysis in the first part of the script, which has been formatted with matching Z gametolog coordinates per W-linked gene.
 
-[Back to top](#contents) 
+[Back to top](#contents)
 
 ## Sex-linked divergence between pitvipers
 This section describes steps to estimate sequence divergence between Crotalus and Deinagkistrodon sex chromosomes.
