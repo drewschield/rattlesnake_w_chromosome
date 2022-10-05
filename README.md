@@ -1398,7 +1398,7 @@ bwa mem -t 16 -R "@RG\tID:$name\tLB:CVOS\tPL:illumina\tPU:NovaSeq6000\tSM:$name"
 
 Instances of '$name' should be replaced with the specific sample to analyze.
 
-Index the bam files.
+#### Index the bam files.
 ```
 for i in ./bam/*.bam; do samtools index $i; done
 ```
@@ -1410,6 +1410,7 @@ Generate a bed file for exons after retrieving and unzipping the autosome/Z chro
 ```
 awk 'BEGIN{OFS="\t"} {if ($3 == "exon") print $1, $4-1, $5, $9}' ./CroVir_rnd1.all.maker.final.homologIDs.gff | bedtools sort -i - > ./CroVir_rnd1.all.maker.final.homologIDs.exon.sort.bed 
 ```
+
 
 
 
