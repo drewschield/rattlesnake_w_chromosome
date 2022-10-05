@@ -1386,6 +1386,9 @@ Run trimmomatic on each sample based on this command.
 trimmomatic PE -phred33 -threads 16 ./fastq/${name}_*_R1_001.fastq.gz ./fastq/${name}_*_R2_001.fastq.gz ./fastq_filtered/${name}_R1_P.trim.fastq.gz ./fastq_filtered/${name}_R1_U.trim.fastq.gz ./fastq_filtered/${name}_R2_P.trim.fastq.gz ./fastq_filtered/${name}_R2_U.trim.fastq.gz LEADING:20 TRAILING:20 MINLEN:32 AVGQUAL:30
 ```
 
+Instances of '$name' should be replaced with the specific sample to analyze.
+
+
 #### Map filtered data to autosomes and the Z chromosome
 
 Run bwa mem to map short reads to reference per sample based on this command.
@@ -1395,10 +1398,18 @@ bwa mem -t 16 -R "@RG\tID:$name\tLB:CVOS\tPL:illumina\tPU:NovaSeq6000\tSM:$name"
 
 Instances of '$name' should be replaced with the specific sample to analyze.
 
+Index the bam files.
+```
+for i in ./bam/*.bam; do samtools index $i; done
+```
 
+#### Calculate mapping statistics
 
+Generate a bed file for exons after retrieving and unzipping the autosome/Z chromosome gene annotation [here](https://figshare.com/ndownloader/files/16522322).
 
-
+```
+awk 'BEGIN{OFS="\t"} {if ($3 == "exon") print $1, $4-1, $5, $9}' ./CroVir_rnd1.all.maker.final.homologIDs.gff | bedtools sort -i - > ./CroVir_rnd1.all.maker.final.homologIDs.exon.sort.bed 
+```
 
 
 
