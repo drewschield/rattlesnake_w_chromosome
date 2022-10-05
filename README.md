@@ -1471,31 +1471,162 @@ Run `./R/gene_duplication_coverage.R` to evaluate relative coverage per W-linked
 [Back to top](#contents)
 
 ## Sex-linked divergence between pitvipers
-This section describes steps to estimate sequence divergence between Crotalus and Deinagkistrodon sex chromosomes.
+This section describes steps to estimate sequence divergence between prairie rattlesnake and five-pace viper sex chromosomes.
 
+#### Set up environment
+```
+mkdir ./divergence/crotalus-deinagkistrodon
+cd ./divergence/crotalus-deinagkistrodon
+```
 
+### 1. Data preparation and identification of sex-linked orthologs between pitvipers
+CDS sequences for Crotalus Z and W gametologs are in `./divergence/crotalus/chrZ.cds.fasta` and `./divergence/crotalus/chrW.cds.fasta`. Deinagkistrodon CDS sequences are available [here](https://ftp.cngb.org/pub/gigadb/pub/10.5524/100001_101000/100196/Deinagkistrodon_acutus.cds.fa.gz).
 
+#### Make BLAST databases for CDS sets.
+```
+makeblastdb -dbtype nucl -in ../crotalus/chrZ.cds.fasta
+makeblastdb -dbtype nucl -in ../crotalus/chrW.cds.fasta
+makeblastdb -dbtype nucl -in ./deinagkistrodon_acutus.cds.fasta
+```
 
+#### Perform reciprocal best-BLAST analysis
+For Z gametologs.
+```
+tblastx -num_threads 8 -max_hsps 1 -evalue 0.00001 -outfmt "6 qacc sacc evalue bitscore qstart qend sstart send" -db ../crotalus/chrZ.cds.fasta -query ./deinagkistrodon_acutus.cds.fasta -out tblastx_Z2dacutus.cds.txt
+tblastx -num_threads 8 -max_hsps 1 -evalue 0.00001 -outfmt "6 qacc sacc evalue bitscore qstart qend sstart send" -db ./deinagkistrodon_acutus.cds.fasta -query ../crotalus/chrZ.cds.fasta -out tblastx_dacutus2Z.cds.txt
+```
+For W gametologs.
+```
+tblastx -num_threads 8 -max_hsps 1 -evalue 0.00001 -outfmt "6 qacc sacc evalue bitscore qstart qend sstart send" -db ../crotalus/chrW.cds.fasta -query ./deinagkistrodon_acutus.cds.fasta -out tblastx_W2dacutus.cds.txt
+tblastx -num_threads 8 -max_hsps 1 -evalue 0.00001 -outfmt "6 qacc sacc evalue bitscore qstart qend sstart send" -db ./deinagkistrodon_acutus.cds.fasta -query ../crotalus/chrW.cds.fasta -out tblastx_dacutus2W.cds.txt
+```
+Run `RBH_comma.py` to perform reciprocal best-BLAST searches for Z and W gametologs.
+```
+python RBH_comma.py tblastx_Z2dacutus.cds.txt tblastx_dacutus2Z.cds.txt gametologs.chrZ_dacutus_cds.one2one.txt
+python RBH_comma.py tblastx_W2dacutus.cds.txt tblastx_dacutus2W.cds.txt gametologs.chrW_dacutus_cds.one2one.txt
+```
+Reformat tab-delimited versions of results.
+```
+sed 's/,/\t/g' gametologs.chrZ_dacutus_cds.one2one.txt > gametologs.chrZ_dacutus_cds.one2one.fix.txt
+sed 's/,/\t/g' gametologs.chrW_dacutus_cds.one2one.txt > gametologs.chrW_dacutus_cds.one2one.fix.txt
+```
 
+#### Relate orthologs to Z chromosome locations
+This is based on the ZW gametolog coordinate file in `./resources/gametologs.cds.one2one.Z_geneID_coordinates.txt`
+Extract Z chromosome coordinates for pitviper Z orthologs.
+```
+touch crotalusZ_deinagkistrodon.ZW_gametolog.coordinates.txt; cat gametologs.chrZ_dacutus_cds.one2one.txt | while read line; do chrz=`echo $line | cut -d, -f1`; dein=`echo $line | cut -d, -f2`; grep -w $chrz ../../resources/gametologs.cds.one2one.Z_geneID_coordinates.txt | awk -v var="$dein" 'BEGIN{OFS="\t"}{print $1,$2,$3,$5,var,$6}' >> crotalusZ_deinagkistrodon.ZW_gametolog.coordinates.txt; done
+```
+Extract Z chromosome coordinates for pitviper W orthologs.
+```
+touch crotalusW_deinagkistrodon.ZW_gametolog.coordinates.txt; cat gametologs.chrW_dacutus_cds.one2one.txt | while read line; do chrw=`echo $line | cut -d, -f1`; dein=`echo $line | cut -d, -f2`; grep -w $chrw ../../resources/gametologs.cds.one2one.Z_geneID_coordinates.txt | awk -v var="$dein" 'BEGIN{OFS="\t"}{print $1,$2,$3,$4,var,$6}' >> crotalusW_deinagkistrodon.ZW_gametolog.coordinates.txt; done
+```
 
+### 2. Analysis of Z-linked orthologs between pitvipers
 
+#### Set up environment
+```
+mkdir ./chrZ
+mkdir ./chrZ/Z_ortholog_seq
+mkdir ./chrZ/Z_ortholog_aln
+mkdir ./chrZ/ctl
+mkdir ./chrZ/codeml
+```
 
+#### Format Z ortholog sequences
+Run `make_Z_ortholog_fasta.py` to format input data.
+```
+python make_Z_ortholog_fasta.py ../crotalusZ_deinagkistrodon.ZW_gametolog.coordinates.txt ../../crotalus/chrZ.cds.fasta ../deinagkistrodon_acutus.cds.fasta
+```
+This outputs sequence pairs to `./Z_ortholog_seq/`.
+Run `translate_Z_ortholog_fasta.py` to convert to amino acid sequences.
+```
+for fasta in Z_ortholog_seq/*.fna; do python translate_Z_ortholog_fasta.py $fasta; done
+```
 
+#### Alignment of Z orthologs
+Run `alignClustal.sh` to align orthologs using Clustal-Omega.
+```
+sh alignClustal.sh Z_ortholog_seq Z_ortholog_aln
+```
+Run `convertPAL2NAL.sh` to convert to codon-based nucleotide alignments.
+```
+sh convertPAL2NAL.sh Z_ortholog_aln Z_ortholog_seq
+```
 
+#### Divergence analysis in CODEML
+Run `ctlWrite.sh` to generate control files for each alignment.
+```
+sh ctlWrite.sh Z_ortholog_aln ctl codeml
+```
+Run CODEML to calculate divergence statistics per alignment.
+```
+for control in ./ctl/*.ctl; do codeml $control; done
+```
+Remove intermediate CODEML files.
+```
+rm ./2*
+rm ./rs*
+rm rub
+```
+Run `parseCodeml_orthologs.sh` to format results.
+```
+sh parseCodeml_orthologs.sh > crotalusZ_deinagkistrodon.dnds.txt
+```
+This script calls the `parse_codeml_output.py` script available [here](https://github.com/faylward/dnds) and modified slightly to print 'NA's for filtered results.
 
+### 3. Analysis of W-linked orthologs between pitvipers
 
+#### Set up environment
+```
+mkdir ./chrW
+mkdir ./chrW/W_ortholog_seq
+mkdir ./chrW/W_ortholog_aln
+mkdir ./chrW/ctl
+mkdir ./chrW/codeml
+```
 
+#### Format Z ortholog sequences
+Run `make_W_ortholog_fasta.py` to format input data.
+```
+python make_W_ortholog_fasta.py ../crotalusW_deinagkistrodon.ZW_gametolog.coordinates.txt ../../crotalus/chrW.cds.fasta ../deinagkistrodon_acutus.cds.fasta
+```
+This outputs sequence pairs to `./W_ortholog_seq/`.
+Run `translate_W_ortholog_fasta.py` to convert to amino acid sequences.
+```
+for fasta in W_ortholog_seq/*.fna; do python translate_W_ortholog_fasta.py $fasta; done
+```
 
+#### Alignment of W orthologs
+Run `alignClustal.sh` to align orthologs using Clustal-Omega.
+```
+sh alignClustal.sh W_ortholog_seq W_ortholog_aln
+```
+Run `convertPAL2NAL.sh` to convert to codon-based nucleotide alignments.
+```
+sh convertPAL2NAL.sh W_ortholog_aln W_ortholog_seq
+```
 
-
-
-
-
-
-
-
-
-UNDER CONSTRUCTION
+#### Divergence analysis in CODEML
+Run `ctlWrite.sh` to generate control files for each alignment.
+```
+sh ctlWrite.sh W_ortholog_aln ctl codeml
+```
+Run CODEML to calculate divergence statistics per alignment.
+```
+for control in ./ctl/*.ctl; do codeml $control; done
+```
+Remove intermediate CODEML files.
+```
+rm ./2*
+rm ./rs*
+rm rub
+```
+Run `parseCodeml_orthologs.sh` to format results.
+```
+sh parseCodeml_orthologs.sh > crotalusW_deinagkistrodon.dnds.txt
+```
+This script calls the `parse_codeml_output.py` script available [here](https://github.com/faylward/dnds) and modified slightly to print 'NA's for filtered results.
 
 ## ZW gametolog GC3 analysis
 
