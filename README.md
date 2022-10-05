@@ -1361,13 +1361,10 @@ ggplot(trans.all.res,aes(x=overlap,y=description,alpha=signif,fill=database)) +
 ```
 
 ## W-specific gene duplications
-
 Short read data from multiple individuals can be used to get a coarse sense of gene-specific copy number (i.e., greater than one copy), and whether putative duplicates are specific to the W chromosome. These analyses will use mapping statistics of female read data to the male reference, containing all autosomes and the Z chromosome, and to the new W chromosome sequence.
 
 ### 1. Coverage of genes on autosomes and the Z chromosome
-
 #### Set up environment
-
 ```
 mkdir coverage_exp_crotalus
 mkdir coverage_exp_crotalus/fastq
@@ -1378,19 +1375,14 @@ cd coverage_exp_crotalus
 ```
 
 #### Run trimmomatic on the raw read data
-
 Read data for female rattlesnakes are available on [NCBI](https://www.ncbi.nlm.nih.gov/bioproject/?term=PRJNA593834) at accession PRJNA593834. Store them in `./fastq/`
-
 Run trimmomatic on each sample based on this command.
 ```
 trimmomatic PE -phred33 -threads 16 ./fastq/${name}_*_R1_001.fastq.gz ./fastq/${name}_*_R2_001.fastq.gz ./fastq_filtered/${name}_R1_P.trim.fastq.gz ./fastq_filtered/${name}_R1_U.trim.fastq.gz ./fastq_filtered/${name}_R2_P.trim.fastq.gz ./fastq_filtered/${name}_R2_U.trim.fastq.gz LEADING:20 TRAILING:20 MINLEN:32 AVGQUAL:30
 ```
-
 Instances of '$name' should be replaced with the specific sample to analyze.
 
-
 #### Map filtered data to autosomes and the Z chromosome
-
 Run bwa mem to map short reads to reference per sample based on this command.
 ```
 bwa mem -t 16 -R "@RG\tID:$name\tLB:CVOS\tPL:illumina\tPU:NovaSeq6000\tSM:$name" ../CroVir_genome_L77pg_16Aug2017.final_rename.fasta ./fastq_filtered/${name}_R1_P.trim.fastq.gz ./fastq_filtered/${name}_R2_P.trim.fastq.gz | samtools sort -@ 16 -O bam -T temp -o ./bam/$name.bam -
@@ -1403,7 +1395,6 @@ for i in ./bam/*.bam; do samtools index $i; done
 ```
 
 #### Calculate mapping statistics
-
 Generate a bed file for exons after retrieving and unzipping the autosome/Z chromosome gene annotation [here](https://figshare.com/ndownloader/files/16522322).
 ```
 awk 'BEGIN{OFS="\t"} {if ($3 == "exon") print $1, $4-1, $5, $9}' ./CroVir_rnd1.all.maker.final.homologIDs.gff | bedtools sort -i - > ./CroVir_rnd1.all.maker.final.homologIDs.exon.sort.bed 
@@ -1418,7 +1409,6 @@ gunzip ./results/*.gz
 for i in ./results/*.regions.bed; do cat $i | wc -l; done
 ```
 The outputs should be the same for each sample.
-
 Concatenate results into data table.
 ```
 echo -e 'chrom\tstart\tend\tfeature\tCV0011\tCV0629\tCV0646\tCV0650' > female.all.CroVir.exon.regions.bed; paste ./results/female.CV0011.CroVir.exon.regions.bed ./results/female.CV0629.CroVir.exon.regions.bed ./results/female.CV0646.CroVir.exon.regions.bed ./results/female.CV0650.CroVir.exon.regions.bed | awk 'BEGIN{OFS="\t"}{print $1,$2,$3,$4,$5,$10,$15,$20}' >> female.all.CroVir.exon.regions.bed
@@ -1431,11 +1421,9 @@ grep -v 'scaffold-Z' female.all.CroVir.exon.regions.CHROM.bed > female.all.autos
 ```
 
 ### 2. Coverage of genes on the W chromosome
-
 These steps are based on a combined autosome, Z chromosome, and W chromosome scaffold set, so that Z gametologs are not spuriously mapped to the W chromosome based on sufficient similarity.
 
 #### Generate combined scaffold set
-
 Concatenate scaffolds and index output.
 ```
 cat ../CroVir_genome_L77pg_16Aug2017.final_rename.fasta ../resources/annotation/Cviridis_CV0650_candidate_W.rescaffold.rename.fasta > CroVir_genome_chrW_agouti.fasta
@@ -1443,7 +1431,6 @@ bwa index CroVir_genome_chrW_agouti.fasta
 ```
 
 #### Map reads to the combined assembly
-
 Run bwa mem per sample following this command.
 ```
 bwa mem -t 4 -R "@RG\tID:$i\tLB:CVOS\tPL:illumina\tPU:NovaSeq6000\tSM:$i" ./CroVir_genome_chrW_agouti.fasta ./fastq_filtered/${i}_R1_P.trim.fq.gz ./fastq_filtered/${i}_R2_P.trim.fq.gz | samtools sort -@ 4 -O bam -T $i | samtools view -F 4 -o ./bam/$i.bam -
@@ -1454,7 +1441,6 @@ for in ./bam/*.bam; do samtools index $i; done
 ```
 
 #### Calculate mapping statistics
-
 Generate bed file of W-linked genes.
 ```
 awk 'BEGIN{OFS="\t"} {if ($3 == "gene") print $1, $4-1, $5, $9}' ../resources/annotation/croVir_Wscaff_rnd2_alt.all.maker.noseq.gff3 | bedtools sort -i - > ./croVir_Wscaff_rnd2_alt.all.maker.noseq.gene.sort.bed
@@ -1462,6 +1448,14 @@ awk 'BEGIN{OFS="\t"} {if ($3 == "gene") print $1, $4-1, $5, $9}' ../resources/an
 Generate bed file of W-linked exons.
 ```
 awk 'BEGIN{OFS="\t"} {if ($3 == "exon") print $1, $4-1, $5, $9}' ../resources/annotation/croVir_Wscaff_rnd2_alt.all.maker.noseq.gff3 | bedtools sort -i - > ./croVir_Wscaff_rnd2_alt.all.maker.noseq.exon.sort.bed
+```
+Generate a bed file for genes after retrieving and unzipping the autosome/Z chromosome gene annotation [here](https://figshare.com/ndownloader/files/16522322).
+```
+awk 'BEGIN{OFS="\t"} {if ($3 == "gene") print $1, $4-1, $5, $9}' ./CroVir_rnd1.all.maker.final.homologIDs.gff | bedtools sort -i - > ./CroVir_rnd1.all.maker.final.homologIDs.gene.sort.bed 
+```
+Generate a bed file of autosome and Z chromosome exons.
+```
+awk 'BEGIN{OFS="\t"} {if ($3 == "exon") print $1, $4-1, $5, $9}' ./CroVir_rnd1.all.maker.final.homologIDs.gff | bedtools sort -i - > ./CroVir_rnd1.all.maker.final.homologIDs.exon.sort.bed 
 ```
 Run `mosdepth_mean.sh` to calculate mean depth per feature on the W chromosome.
 ```
@@ -1471,10 +1465,28 @@ Run `mosdepth_mean.sh` to calculate mean depth per feature on the autosomes and 
 ```
 sh mosdepth_mean.sh CroVir_rnd1.all.maker.final.homologIDs.exon.sort.bed exon CroVir
 ```
+Check that all features have data per individual.
+```
+gunzip ./results/*.gz
+for i in ./results/*.regions.bed; do cat $i | wc -l; done
+```
+The outputs should be the same for each sample for the 'agouti' and 'CroVir' files.
+Calculate mean per gene based on exon data.
+```
+for sample in CV0011 CV0629 CV0646 CV0650; do bedtools sort -i ./results/female.$sample.agouti.exon.regions.bed | bedtools map -a croVir_Wscaff_rnd2_alt.all.maker.noseq.gene.sort.bed -b - -c 5 -o mean > ./results/female.$sample.agouti.gene.regions.bed; done
+for sample in CV0011 CV0629 CV0646 CV0650; do bedtools sort -i ./results/female.$sample.CroVir.exon.regions.bed | bedtools map -a CroVir_rnd1.all.maker.final.homologIDs.gene.sort.bed -b - -c 5 -o mean > ./results/female.$sample.CroVir.gene.regions.bed; done
+```
+Concatenate into data tables.
+```
+echo -e 'chrom\tstart\tend\tfeature\tCV0011\tCV0629\tCV0646\tCV0650' > female.all.chrW_agouti.gene.regions.bed; paste ./results/female.CV0011.agouti.gene.regions.bed ./results/female.CV0629.agouti.gene.regions.bed ./results/female.CV0646.agouti.gene.regions.bed ./results/female.CV0650.agouti.gene.regions.bed | awk 'BEGIN{OFS="\t"}{print $1,$2,$3,$4,$5,$10,$15,$20}' >> female.all.chrW_agouti.gene.regions.bed
+echo -e 'chrom\tstart\tend\tfeature\tCV0011\tCV0629\tCV0646\tCV0650' > tmp.bed; paste ./results/female.CV0011.CroVir-alt.gene.regions.bed ./results/female.CV0629.CroVir-alt.gene.regions.bed ./results/female.CV0646.CroVir-alt.gene.regions.bed ./results/female.CV0650.CroVir-alt.gene.regions.bed | awk 'BEGIN{OFS="\t"}{print $1,$2,$3,$4,$5,$10,$15,$20}' >> tmp.bed
+grep -v 'scaffold-Z' tmp.bed | grep -v 'scaffold-un' > female.all.CroVir.autosome.gene.regions.bed
+rm tmp.bed
+```
 
+#### Calculate relative coverage per W-linked gene
 
-
-
+Run `./R/gene_duplication_coverage.R` to evaluate relative coverage per W-linked gene across samples. The script also references the data in `./resources/W_copy-number.txt` based on analysis in the first part of the script, which has been formatted with matching Z gametolog coordinates per W-linked gene.
 
 
 
