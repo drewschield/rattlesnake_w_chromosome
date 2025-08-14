@@ -2,11 +2,11 @@
 
 ![Rattlesnake W chromosome analysis](/cover-image.png "cover image")
 
-This repository contains details on the data processing and analysis steps used to assemble, annotate, and characterize the female-specific W chromosome of the prairie rattlesnake (_Crotalus viridis_), including comparative genomic analyses with other caenophidian snake and amniote species. This workflow is a companion to the methods described in Schield et al. (_in review_).
+This repository contains details on the data processing and analysis steps used to assemble, annotate, and characterize the female-specific W chromosome of the prairie rattlesnake (_Crotalus viridis_), including comparative genomic analyses with other caenophidian snake and amniote species. This workflow is a companion to the methods described in [Schield et al. 2022. GBE](https://academic.oup.com/gbe/article/14/9/evac116/6648526).
 
 Lists and reference files can be found in the `resources` directory. Shell and Python scripts are in `shell` and `python` directories, respectively. R scripts are in the `R` directory. Note that you may need to adjust the organization of path/file locations to suit your environment. This workflow assumes that you return to the main working directory after each major section.
 
-Feel free to email me at drew.schield[at]colorado.edu with any questions.
+Feel free to email me at drew.schield[at]virginia.edu with any questions.
 
 ## Contents
 
